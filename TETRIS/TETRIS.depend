@@ -1,0 +1,8 @@
+# depslib dependency file v1.0
+1609103083 source:c:\users\user\desktop\informatyka uwr\c\tetris-project\tetris\main.c
+	<stdio.h>
+	<stdlib.h>
+	<time.h>
+	<conio.h>
+	<windows.h>
+
