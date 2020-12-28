@@ -6,12 +6,15 @@
 
 #include "blocks.h"
 
+void ClearScreen();
+void HideCursor();
+
 void Inicjalizuj(char plansza[WYS][SZER]);
 void Rysuj(char plansza[WYS][SZER]);
 
 void Pauza();
 
-//void Spadek(char plansza[WYS][SZER], Pkt srodek);
+Pkt Spadek(char plansza[WYS][SZER], Pkt srodek);
 
 
 #endif // FUNCTIONS_H_INCLUDED

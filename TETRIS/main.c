@@ -7,29 +7,26 @@
 #include "functions.h"
 #include "blocks.h"
 
-typedef struct
-{
-    int x;
-    int y;
-} Pkt;
 
 #define WYS 22
 #define SZER 12
 
 int main()
 {
+    HideCursor();
+
     // INICJALIZACJA PLANSZY
     char plansza[WYS][SZER];
 
     Inicjalizuj(plansza);
 
     Pkt srodek;
-    srodek.x = 1;
-    srodek.y = 5;
+    srodek.x = 5;
+    srodek.y = 1;
 
     // ###
     //  #
-    plansza[srodek.x][srodek.y] = plansza[srodek.x][srodek.y-1] = plansza[srodek.x][srodek.y+1] = plansza[srodek.x+1][srodek.y] = '#';
+    plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = '#';
 
     int znak;
     time_t now, start;
@@ -37,7 +34,7 @@ int main()
     {
         Rysuj(plansza);
         start = time(&now);
-        while( difftime(time(&now),start) < 2 ) // Potem powinno przyspieszac
+        while( difftime(time(&now),start) < 1 ) // Potem powinno przyspieszac
         {
             if (kbhit())
             {
@@ -49,13 +46,18 @@ int main()
                 else if (znak == 'a')
                     Lewo();
                 else if (znak == 'd')
-                    Prawo();
+                    Prawo();*/
                 else if (znak == 's')
-                    Dol();*/
+                {
+                    srodek = Spadek(plansza, srodek);
+                    ClearScreen();
+                    Rysuj(plansza);
+                }
             }
         }
-        system("cls");
-        //Spadek(plansza, srodek);
+        srodek = Spadek(plansza, srodek);
+        ClearScreen();
+        //system("cls");
 
     }
 

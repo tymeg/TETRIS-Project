@@ -9,6 +9,30 @@
 #define WYS 22
 #define SZER 12
 
+void ClearScreen()
+{
+COORD cursorPosition;
+cursorPosition.X = 0;
+cursorPosition.Y = 0;
+SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
+}
+
+void HideCursor()
+{
+    HANDLE hOut;
+    CONSOLE_CURSOR_INFO ConCurInf;
+
+    hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
+    ConCurInf.dwSize = 10;
+    ConCurInf.bVisible = FALSE;
+
+    SetConsoleCursorInfo(hOut, &ConCurInf);
+}
+
+
+
+
 void Inicjalizuj(char plansza[WYS][SZER])
 {
     for (int i=0; i<12; i++)
@@ -42,10 +66,7 @@ void Pauza()
         {
             znak = getch();
             if (znak == 27) // ESC - resume
-            {
-                printf("RESUME\n");
-                break;
-            }
+                return;
             else if (znak == 'm') // M - menu
             {
                 printf("MENU\n");
@@ -54,7 +75,7 @@ void Pauza()
             else if (znak == 'r') // R - restart
             {
                 printf("RESTART\n");
-                break;
+                return;
             }
         }
         else
@@ -62,11 +83,15 @@ void Pauza()
     }
 }
 
-/*void Spadek(char plansza[WYS][SZER], Pkt srodek)
+Pkt Spadek(char plansza[WYS][SZER], Pkt srodek)
 {
-    plansza[srodek.x][srodek.y] = plansza[srodek.x][srodek.y-1] = plansza[srodek.x][srodek.y+1] = plansza[srodek.x+1][srodek.y] = ' ';
-    (srodek.x)++;
-    plansza[srodek.x][srodek.y] = plansza[srodek.x][srodek.y-1] = plansza[srodek.x][srodek.y+1] = plansza[srodek.x+1][srodek.y] = '#';
-
-}*/
+    if (plansza[srodek.y+2][srodek.x] == ' ')
+    {
+    plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = ' ';
+    (srodek.y)++;
+    plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = '#';
+    }
+    //else - nowy klocek na gore
+    return srodek;
+}
 
