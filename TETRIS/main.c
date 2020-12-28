@@ -28,6 +28,7 @@ int main()
     //  #
     plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = '#';
 
+
     int znak;
     time_t now, start;
     while (1)
@@ -41,13 +42,23 @@ int main()
                 znak = getch();
                 if (znak == 27) // ESC - pause
                     Pauza();
-                /*else if (znak == 'w')
+                /*
+                else if (znak == 'w')
                     Obrot();
-                else if (znak == 'a')
-                    Lewo();
-                else if (znak == 'd')
-                    Prawo();*/
-                else if (znak == 's')
+                */
+                else if (znak == 'a')   // Lewo
+                {
+                    srodek = Lewo(plansza, srodek);
+                    ClearScreen();
+                    Rysuj(plansza);
+                }
+                else if (znak == 'd')   // Prawo
+                {
+                    srodek = Prawo(plansza, srodek);
+                    ClearScreen();
+                    Rysuj(plansza);
+                }
+                else if (znak == 's')   // Dol
                 {
                     srodek = Spadek(plansza, srodek);
                     ClearScreen();

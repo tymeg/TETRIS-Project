@@ -15,6 +15,8 @@ void Rysuj(char plansza[WYS][SZER]);
 void Pauza();
 
 Pkt Spadek(char plansza[WYS][SZER], Pkt srodek);
+Pkt Lewo(char plansza[WYS][SZER], Pkt srodek);
+Pkt Prawo(char plansza[WYS][SZER], Pkt srodek);
 
 
 #endif // FUNCTIONS_H_INCLUDED

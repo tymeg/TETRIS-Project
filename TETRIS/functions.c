@@ -85,13 +85,42 @@ void Pauza()
 
 Pkt Spadek(char plansza[WYS][SZER], Pkt srodek)
 {
-    if (plansza[srodek.y+2][srodek.x] == ' ')
+    if (plansza[srodek.y+2][srodek.x] == ' ' && plansza[srodek.y+1][srodek.x+1] == ' ' && plansza[srodek.y+1][srodek.x-1] == ' ')
     {
-    plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = ' ';
-    (srodek.y)++;
-    plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = '#';
+        plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = ' ';
+        (srodek.y)++;
+        plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = '#';
     }
-    //else - nowy klocek na gore
+    else
+    {
+        // funkcja nowy klocek (losowanie klocka)
+        srodek.y = 1;
+        srodek.x = 5;
+        plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = '#';
+    }
+    return srodek;
+}
+
+
+Pkt Lewo(char plansza[WYS][SZER], Pkt srodek)
+{
+    if (plansza[srodek.y][srodek.x-2] == ' ' && plansza[srodek.y+1][srodek.x-1] == ' ')
+    {
+        plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = ' ';
+        (srodek.x)--;
+        plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = '#';
+    }
+    return srodek;
+}
+
+Pkt Prawo(char plansza[WYS][SZER], Pkt srodek)
+{
+    if (plansza[srodek.y][srodek.x+2] == ' ' && plansza[srodek.y+1][srodek.x+1] == ' ')
+    {
+        plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = ' ';
+        (srodek.x)++;
+        plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = '#';
+    }
     return srodek;
 }
 
