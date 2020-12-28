@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <time.h>
 #include <conio.h>
 #include <windows.h>
@@ -83,44 +84,55 @@ void Pauza()
     }
 }
 
-Pkt Spadek(char plansza[WYS][SZER], Pkt srodek)
+Klocek Spadek(char plansza[WYS][SZER], Klocek Obecny, bool *spadl)
 {
-    if (plansza[srodek.y+2][srodek.x] == ' ' && plansza[srodek.y+1][srodek.x+1] == ' ' && plansza[srodek.y+1][srodek.x-1] == ' ')
+    bool czy_mozna = true;
+
+    for (int i=0; i<4; i++)
+        if (plansza[Obecny.kwadraty[i].y+1][Obecny.kwadraty[i].x] == '#' || plansza[Obecny.kwadraty[i].y+1][Obecny.kwadraty[i].x] == 'O')
+        {
+            czy_mozna = false;
+            break;
+        }
+
+    if (czy_mozna)
     {
-        plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = ' ';
-        (srodek.y)++;
-        plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = '#';
+        for (int i=0; i<4; i++)
+        {
+            plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] = ' ';
+            (Obecny.kwadraty[i].y)++;
+        }
+
+        (Obecny.srodek.y)++;
+        for (int i=0; i<4; i++)
+            plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] = '+';
+
+        for (int i=0; i<Obecny.m; i++)
+            (Obecny.zakazane[i].y)++;
     }
     else
     {
-        // funkcja nowy klocek (losowanie klocka)
-        srodek.y = 1;
-        srodek.x = 5;
-        plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = '#';
+        *spadl = true;
+        for (int i=0; i<4; i++)
+            plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] = '#';
     }
-    return srodek;
+
+    return Obecny;
 }
 
-
-Pkt Lewo(char plansza[WYS][SZER], Pkt srodek)
+/*
+Klocek Lewo(char plansza[WYS][SZER], Klocek Obecny)
 {
-    if (plansza[srodek.y][srodek.x-2] == ' ' && plansza[srodek.y+1][srodek.x-1] == ' ')
-    {
-        plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = ' ';
-        (srodek.x)--;
-        plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = '#';
-    }
-    return srodek;
+
 }
 
-Pkt Prawo(char plansza[WYS][SZER], Pkt srodek)
+Klocek Prawo(char plansza[WYS][SZER], Klocek Obecny)
 {
-    if (plansza[srodek.y][srodek.x+2] == ' ' && plansza[srodek.y+1][srodek.x+1] == ' ')
-    {
-        plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = ' ';
-        (srodek.x)++;
-        plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = '#';
-    }
-    return srodek;
+
 }
 
+Klocek Obrot(char plansza[WYS][SZER], Klocek Obecny)
+{
+
+}
+*/

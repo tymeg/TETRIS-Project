@@ -14,9 +14,11 @@ void Rysuj(char plansza[WYS][SZER]);
 
 void Pauza();
 
-Pkt Spadek(char plansza[WYS][SZER], Pkt srodek);
-Pkt Lewo(char plansza[WYS][SZER], Pkt srodek);
-Pkt Prawo(char plansza[WYS][SZER], Pkt srodek);
-
+Klocek Spadek(char plansza[WYS][SZER], Klocek Obecny, bool *spadl);
+/*
+Klocek Lewo(char plansza[WYS][SZER], Klocek Obecny);
+Klocek Prawo(char plansza[WYS][SZER], Klocek Obecny);
+Klocek Obrot(char plansza[WYS][SZER], Klocek Obecny);
+*/
 
 #endif // FUNCTIONS_H_INCLUDED
