@@ -8,9 +8,6 @@
 #include "functions.h"
 #include "blocks.h"
 
-#define WYS 22
-#define SZER 12
-
 int main()
 {
     HideCursor();
@@ -50,30 +47,28 @@ int main()
                 znak = getch();
                 if (znak == 27) // ESC - pause
                     Pauza();
-                //else if (znak == 'w')
-                   // Obrot();
-                /*else if (znak == 'a')   // Lewo
+                else if (znak == 'w')
                 {
-                    srodek = Lewo(plansza, srodek);
+                    Obrot(plansza, &Obecny);
+                    ClearScreen();
+                    Rysuj(plansza);
+                }
+                else if (znak == 'a')   // Lewo
+                {
+                    Lewo(plansza, &Obecny);
                     ClearScreen();
                     Rysuj(plansza);
                 }
                 else if (znak == 'd')   // Prawo
                 {
-                    srodek = Prawo(plansza, srodek);
+                    Prawo(plansza, &Obecny);
                     ClearScreen();
                     Rysuj(plansza);
-                }*/
+                }
                 else if (znak == 's')   // Dol
                 {
                     if (Spadek(plansza, &Obecny))
                         Obecny = Losuj(plansza, tab);
-                        /*
-                        los = rand() % 7;
-                        Obecny = tab[los];
-                        for (int i=0; i<4; i++)
-                            plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] = '+';
-                        */
                     ClearScreen();
                     Rysuj(plansza);
                 }

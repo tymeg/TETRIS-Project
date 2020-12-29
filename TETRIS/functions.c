@@ -7,9 +7,6 @@
 
 #include "blocks.h"
 
-#define WYS 22
-#define SZER 12
-
 void ClearScreen()
 {
 COORD cursorPosition;
@@ -172,19 +169,96 @@ bool Spadek(char plansza[WYS][SZER], Klocek *Obecny)
 
 
 
-/*
-Klocek Lewo(char plansza[WYS][SZER], Klocek Obecny)
+
+void Lewo(char plansza[WYS][SZER], Klocek *Obecny)
 {
+    bool czy_mozna = true;
+
+    for (int i=0; i<4; i++)
+        if (plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x-1] == '#' || plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x-1] == 'O')
+        {
+            czy_mozna = false;
+            break;
+        }
+
+    if (czy_mozna)
+    {
+        for (int i=0; i<4; i++)
+        {
+            plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = ' ';
+            (Obecny->kwadraty[i].x)--;
+        }
+
+        (Obecny->srodek.x)--;
+        for (int i=0; i<4; i++)
+            plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = '+';
+
+        for (int i=0; i<Obecny->m; i++)
+            (Obecny->zakazane[i].x)--;
+    }
+}
+
+void Prawo(char plansza[WYS][SZER], Klocek *Obecny)
+{
+    bool czy_mozna = true;
+
+    for (int i=0; i<4; i++)
+        if (plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x+1] == '#' || plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x+1] == 'O')
+        {
+            czy_mozna = false;
+            break;
+        }
+
+    if (czy_mozna)
+    {
+        for (int i=0; i<4; i++)
+        {
+            plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = ' ';
+            (Obecny->kwadraty[i].x)++;
+        }
+
+        (Obecny->srodek.x)++;
+        for (int i=0; i<4; i++)
+            plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = '+';
+
+        for (int i=0; i<Obecny->m; i++)
+            (Obecny->zakazane[i].x)++;
+    }
+}
+
+void ObrotPunktuWzglSrodka (Pkt *p, Pkt sr)
+{
+    int xp, yp;
+    xp = sr.x - sr.y + p->y;
+    yp = sr.x + sr.y + p->x;
+    p->x = xp;
+    p->y = yp;
+}
+
+void Obrot(char plansza[WYS][SZER], Klocek *Obecny)
+{
+    if (Obecny->m == 0)
+        return;
+
+    bool czy_mozna = true;
+
+    for (int i=0; i<Obecny->m; i++)
+        if (plansza[Obecny->zakazane[i].y][Obecny->zakazane[i].x] == '#' || plansza[Obecny->zakazane[i].y][Obecny->zakazane[i].x] == 'O')
+            czy_mozna = false;
+
+    if (czy_mozna)
+    {
+        for (int i=0; i<4; i++)
+            plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = ' ';
+
+        for (int i=0; i<4; i++)
+            ObrotPunktuWzglSrodka( &(Obecny->kwadraty[i]), Obecny->srodek);
+        for (int i=0; i<Obecny->m; i++)
+            ObrotPunktuWzglSrodka( &(Obecny->zakazane[i]), Obecny->srodek);
+
+        for (int i=0; i<4; i++)
+            plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = '+';
+    }
 
 }
 
-Klocek Prawo(char plansza[WYS][SZER], Klocek Obecny)
-{
-
-}
-
-Klocek Obrot(char plansza[WYS][SZER], Klocek Obecny)
-{
-
-}
-*/

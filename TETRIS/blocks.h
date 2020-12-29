@@ -1,6 +1,9 @@
 #ifndef BLOCKS_H_INCLUDED
 #define BLOCKS_H_INCLUDED
 
+#define WYS 22
+#define SZER 12
+
 typedef struct
 {
     int x, y;
