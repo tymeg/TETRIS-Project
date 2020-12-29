@@ -244,7 +244,10 @@ void Obrot(char plansza[WYS][SZER], Klocek *Obecny)
 
     for (int i=0; i<Obecny->m; i++)
         if (plansza[Obecny->zakazane[i].y][Obecny->zakazane[i].x] == '#' || plansza[Obecny->zakazane[i].y][Obecny->zakazane[i].x] == 'O')
+        {
             czy_mozna = false;
+            break;
+        }
 
     if (czy_mozna)
     {
@@ -261,4 +264,3 @@ void Obrot(char plansza[WYS][SZER], Klocek *Obecny)
     }
 
 }
-

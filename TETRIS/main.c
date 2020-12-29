@@ -40,7 +40,7 @@ int main()
     {
         Rysuj(plansza);
         start = time(&now);
-        while( difftime(time(&now),start) < 1 ) // Potem powinno przyspieszac
+        while( (time(&now) - start) < 1 ) // Potem powinno przyspieszac
         {
             if (kbhit())
             {
@@ -69,6 +69,13 @@ int main()
                 {
                     if (Spadek(plansza, &Obecny))
                         Obecny = Losuj(plansza, tab);
+                    ClearScreen();
+                    Rysuj(plansza);
+                }
+                else if (znak == 13)   // ENTER - spadek na sam dol
+                {
+                    while (!Spadek(plansza, &Obecny));
+                    Obecny = Losuj(plansza, tab);
                     ClearScreen();
                     Rysuj(plansza);
                 }
