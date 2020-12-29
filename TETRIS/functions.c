@@ -84,6 +84,17 @@ void Pauza()
     }
 }
 
+Klocek Losuj(char plansza[WYS][SZER], Klocek tab[7])
+{
+    int los = rand() % 7;
+    Klocek Obecny = tab[los];
+    for (int i=0; i<4; i++)
+        plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] = '+';
+    return Obecny;
+}
+
+
+/* funkcja spadek jako funkcja zwracajaca Klocek
 Klocek Spadek(char plansza[WYS][SZER], Klocek Obecny, bool *spadl)
 {
     bool czy_mozna = true;
@@ -119,6 +130,47 @@ Klocek Spadek(char plansza[WYS][SZER], Klocek Obecny, bool *spadl)
 
     return Obecny;
 }
+*/
+
+// funkcja Spadek operujaca wskaznikiem do struktury Klocek
+bool Spadek(char plansza[WYS][SZER], Klocek *Obecny)
+{
+    bool czy_mozna = true;
+
+    for (int i=0; i<4; i++)
+        if (plansza[Obecny->kwadraty[i].y+1][Obecny->kwadraty[i].x] == '#' || plansza[Obecny->kwadraty[i].y+1][Obecny->kwadraty[i].x] == 'O')
+        {
+            czy_mozna = false;
+            break;
+        }
+
+    if (czy_mozna)
+    {
+        for (int i=0; i<4; i++)
+        {
+            plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = ' ';
+            (Obecny->kwadraty[i].y)++;
+        }
+
+        (Obecny->srodek.y)++;
+        for (int i=0; i<4; i++)
+            plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = '+';
+
+        for (int i=0; i<Obecny->m; i++)
+            (Obecny->zakazane[i].y)++;
+
+        return false;
+    }
+    else
+    {
+        for (int i=0; i<4; i++)
+            plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = '#';
+
+        return true;
+    }
+}
+
+
 
 /*
 Klocek Lewo(char plansza[WYS][SZER], Klocek Obecny)

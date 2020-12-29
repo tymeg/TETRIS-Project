@@ -14,7 +14,10 @@ void Rysuj(char plansza[WYS][SZER]);
 
 void Pauza();
 
-Klocek Spadek(char plansza[WYS][SZER], Klocek Obecny, bool *spadl);
+Klocek Losuj(char plansza[WYS][SZER], Klocek tab[7]);
+
+bool Spadek(char plansza[WYS][SZER], Klocek *Obecny);
+//Klocek Spadek(char plansza[WYS][SZER], Klocek Obecny, bool *spadl);
 /*
 Klocek Lewo(char plansza[WYS][SZER], Klocek Obecny);
 Klocek Prawo(char plansza[WYS][SZER], Klocek Obecny);

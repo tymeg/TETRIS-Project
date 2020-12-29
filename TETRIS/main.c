@@ -34,21 +34,10 @@ int main()
 
     Inicjalizuj(plansza);
 
-    //printf("%d\n", I.zakazane[3].x);
-
-    // ###
-    //  #
-    //plansza[srodek.y][srodek.x] = plansza[srodek.y][srodek.x-1] = plansza[srodek.y][srodek.x+1] = plansza[srodek.y+1][srodek.x] = '#';
-
     srand(time(NULL));
-    int los = rand() % 7;
-    Klocek Obecny = tab[los];
-
-    for (int i=0; i<4; i++)
-        plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] = '+';
+    Klocek Obecny = Losuj(plansza, tab);
 
     int znak;
-    bool spadl = false;
     time_t now, start;
     while (1)
     {
@@ -77,29 +66,21 @@ int main()
                 }*/
                 else if (znak == 's')   // Dol
                 {
-                    Obecny = Spadek(plansza, Obecny, &spadl);
-                    if (spadl)
-                    {
-                        spadl = false;
+                    if (Spadek(plansza, &Obecny))
+                        Obecny = Losuj(plansza, tab);
+                        /*
                         los = rand() % 7;
                         Obecny = tab[los];
                         for (int i=0; i<4; i++)
                             plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] = '+';
-                    }
+                        */
                     ClearScreen();
                     Rysuj(plansza);
                 }
             }
         }
-        Obecny = Spadek(plansza, Obecny, &spadl);
-        if (spadl)
-        {
-            spadl = false;
-            los = rand() % 7;
-            Obecny = tab[los];
-            for (int i=0; i<4; i++)
-                plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] = '+';
-        }
+        if (Spadek(plansza, &Obecny))
+            Obecny = Losuj(plansza, tab);
         ClearScreen();
         //system("cls");
 
