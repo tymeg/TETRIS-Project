@@ -92,14 +92,16 @@ Klocek Losuj(char plansza[WYS][SZER], Klocek tab[7])
 
 bool RysujKlocek(char plansza[WYS][SZER], Klocek Obecny)
 {
+    bool pom = true;
+
     for (int i=0; i<4; i++)
     {
         if (plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] != '#')
             plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] = '+';
         else
-            return false;
+            pom = false;
     }
-    return true;
+    return pom;
 }
 
 bool Spadek(char plansza[WYS][SZER], Klocek *Obecny)
@@ -309,16 +311,14 @@ bool SprawdzWiersze (char plansza[WYS][SZER])
             UsunWiersz(plansza, i);
         }
     }
-    if (usunieto)
-        return true;
-    else
-        return false;
+    return usunieto;
 }
 
 void KoniecGry(char plansza[WYS][SZER], Klocek Obecny)
 {
     ClearScreen();
     Rysuj(plansza);
+    Sleep(1000);
     Spadek(plansza, &Obecny);
     ClearScreen();
     Rysuj(plansza);
