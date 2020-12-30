@@ -66,13 +66,25 @@ int main()
                 else if (znak == 's')   // Dol
                 {
                     if (Spadek(plansza, &Obecny))
+                    {
+                        if (SprawdzWiersze(plansza))
+                        {
+                            ClearScreen();
+                            Rysuj(plansza);
+                        }
                         Obecny = Losuj(plansza, tab);
+                    }
                     ClearScreen();
                     Rysuj(plansza);
                 }
                 else if (znak == 13)   // ENTER - spadek na sam dol
                 {
                     while (!Spadek(plansza, &Obecny));
+                    if (SprawdzWiersze(plansza))
+                    {
+                        ClearScreen();
+                        Rysuj(plansza);
+                    }
                     Obecny = Losuj(plansza, tab);
                     ClearScreen();
                     Rysuj(plansza);
@@ -80,7 +92,14 @@ int main()
             }
         }
         if (Spadek(plansza, &Obecny))
+        {
+            if (SprawdzWiersze(plansza))
+            {
+                ClearScreen();
+                Rysuj(plansza);
+            }
             Obecny = Losuj(plansza, tab);
+        }
         ClearScreen();
         //system("cls");
 

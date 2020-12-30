@@ -255,3 +255,54 @@ void Obrot(char plansza[WYS][SZER], Klocek *Obecny)
     }
 
 }
+
+void UsunWiersz (char plansza[WYS][SZER], int wiersz)
+{
+    bool pusty = false;
+
+    while (!pusty)  // jesli wiersz-1 jest pusty albo zajety kolkami, to koncz przesuwanie wierszy w dol
+    {
+        pusty = true;
+        for (int j=2; j<12; j++)
+            if (plansza[wiersz-1][j] == '#')
+            {
+                pusty = false;
+                break;
+            }
+
+        if (plansza[wiersz-1][2] != 'O')
+            for (int j=2; j<12; j++)
+                plansza[wiersz][j] = plansza[wiersz-1][j];
+        else    // najwyzszy wiersz
+            for (int j=2; j<12; j++)
+                plansza[wiersz][j] = ' ';
+
+        wiersz--;
+    }
+
+}
+
+bool SprawdzWiersze (char plansza[WYS][SZER])
+{
+    bool usunieto = false;
+
+    for (int i=2; i<22; i++)
+    {
+        bool pelny = true;
+        for (int j=2; j<12; j++)
+            if (plansza[i][j] == ' ')
+            {
+                pelny = false;
+                break;
+            }
+        if (pelny)
+        {
+            usunieto = true;
+            UsunWiersz(plansza, i);
+        }
+    }
+    if (usunieto)
+        return true;
+    else
+        return false;
+}

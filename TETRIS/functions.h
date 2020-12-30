@@ -21,5 +21,8 @@ void Prawo(char plansza[WYS][SZER], Klocek *Obecny);
 void ObrotPunktuWzglSrodka (Pkt *p, Pkt sr);
 void Obrot(char plansza[WYS][SZER], Klocek *Obecny);
 
+void UsunWiersz (char plansza[WYS][SZER], int wiersz);
+bool SprawdzWiersze (char plansza[WYS][SZER]);
+
 
 #endif // FUNCTIONS_H_INCLUDED
