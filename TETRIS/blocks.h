@@ -15,7 +15,7 @@ typedef struct
     int m; // ilosc zakazanych pol
     Pkt srodek;
     Pkt kwadraty[4];
-    Pkt zakazane[8];
+    Pkt zakazane[3];
     Pkt siatka[5][5];
 
 } Klocek;
