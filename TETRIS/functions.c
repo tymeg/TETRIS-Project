@@ -205,7 +205,7 @@ void ObrotPunktuWzglSrodka (Pkt *p, Pkt sr)
 {
     int xp, yp;
     xp = sr.x - sr.y + p->y;
-    yp = sr.x + sr.y + p->x;
+    yp = sr.x + sr.y - p->x;
     p->x = xp;
     p->y = yp;
 }
