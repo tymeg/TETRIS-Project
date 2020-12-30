@@ -31,6 +31,8 @@ int main()
 
     srand(time(NULL));
     Klocek Obecny = Losuj(plansza, tab);
+    RysujKlocek(plansza, Obecny);
+    Klocek Nastepny = Losuj(plansza, tab);
 
     int znak;
     time_t now, start;
@@ -72,7 +74,14 @@ int main()
                             ClearScreen();
                             Rysuj(plansza);
                         }
-                        Obecny = Losuj(plansza, tab);
+                        Obecny = Nastepny;
+                        if (!RysujKlocek(plansza, Obecny))
+                        {
+                            KoniecGry(plansza, Obecny);
+                            system("pause");
+                            return 0;
+                        }
+                        Nastepny = Losuj(plansza, tab);
                     }
                     ClearScreen();
                     Rysuj(plansza);
@@ -85,7 +94,14 @@ int main()
                         ClearScreen();
                         Rysuj(plansza);
                     }
-                    Obecny = Losuj(plansza, tab);
+                    Obecny = Nastepny;
+                    if (!RysujKlocek(plansza, Obecny))
+                    {
+                        KoniecGry(plansza, Obecny);
+                        system("pause");
+                        return 0;
+                    }
+                    Nastepny = Losuj(plansza, tab);
                     ClearScreen();
                     Rysuj(plansza);
                 }
@@ -98,7 +114,14 @@ int main()
                 ClearScreen();
                 Rysuj(plansza);
             }
-            Obecny = Losuj(plansza, tab);
+            Obecny = Nastepny;
+            if (!RysujKlocek(plansza, Obecny))
+            {
+                KoniecGry(plansza, Obecny);
+                system("pause");
+                return 0;
+            }
+            Nastepny = Losuj(plansza, tab);
         }
         ClearScreen();
         //system("cls");

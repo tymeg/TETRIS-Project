@@ -87,12 +87,20 @@ void Pauza()
 Klocek Losuj(char plansza[WYS][SZER], Klocek tab[7])
 {
     int los = rand() % 7;
-    Klocek Obecny = tab[los];
-    for (int i=0; i<4; i++)
-        plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] = '+';
-    return Obecny;
+    return tab[los];
 }
 
+bool RysujKlocek(char plansza[WYS][SZER], Klocek Obecny)
+{
+    for (int i=0; i<4; i++)
+    {
+        if (plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] != '#')
+            plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] = '+';
+        else
+            return false;
+    }
+    return true;
+}
 
 bool Spadek(char plansza[WYS][SZER], Klocek *Obecny)
 {
@@ -305,4 +313,15 @@ bool SprawdzWiersze (char plansza[WYS][SZER])
         return true;
     else
         return false;
+}
+
+void KoniecGry(char plansza[WYS][SZER], Klocek Obecny)
+{
+    ClearScreen();
+    Rysuj(plansza);
+    Spadek(plansza, &Obecny);
+    ClearScreen();
+    Rysuj(plansza);
+    printf("GAME OVER\n\n");
+    Sleep(1000);
 }
