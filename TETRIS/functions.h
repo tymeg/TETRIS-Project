@@ -14,12 +14,10 @@ void Pauza();
 Klocek Losuj(char plansza[WYS][SZER], Klocek tab[7]);
 
 bool Spadek(char plansza[WYS][SZER], Klocek *Obecny);
-//Klocek Spadek(char plansza[WYS][SZER], Klocek Obecny, bool *spadl);
 
 void Lewo(char plansza[WYS][SZER], Klocek *Obecny);
 void Prawo(char plansza[WYS][SZER], Klocek *Obecny);
 
-// Zle
 void ObrotPunktuWzglSrodka (Pkt *p, Pkt sr);
 void Obrot(char plansza[WYS][SZER], Klocek *Obecny);
 

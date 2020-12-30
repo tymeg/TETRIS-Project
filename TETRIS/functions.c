@@ -28,27 +28,30 @@ void HideCursor()
     SetConsoleCursorInfo(hOut, &ConCurInf);
 }
 
-
-
-
 void Inicjalizuj(char plansza[WYS][SZER])
 {
-    for (int i=0; i<12; i++)
-        plansza[0][i] = plansza[21][i] = 'O';
+    for (int i=0; i<14; i++)
+        plansza[0][i] = plansza[23][i] = ' ';
 
-    for (int j=1; j<21; j++)
+    plansza[1][0] = plansza[1][13] = plansza[22][0] = plansza[22][13] = ' ';
+
+    for (int i=1; i<13; i++)
+        plansza[1][i] = plansza[22][i] = 'O';
+
+    for (int j=2; j<22; j++)
     {
-        plansza[j][0] = plansza[j][11] = 'O';
-        for (int k=1; k<11; k++)
+        plansza[j][0] = plansza[j][13] = ' ';
+        plansza[j][1] = plansza[j][12] = 'O';
+        for (int k=2; k<12; k++)
             plansza[j][k] = ' ';
     }
 }
 
 void Rysuj(char plansza[WYS][SZER])
 {
-    for (int i=0; i<22; i++)
+    for (int i=0; i<WYS; i++)
     {
-        for (int j=0; j<12; j++)
+        for (int j=0; j<SZER; j++)
             printf("%c", plansza[i][j]);
         printf("\n");
     }
@@ -91,45 +94,6 @@ Klocek Losuj(char plansza[WYS][SZER], Klocek tab[7])
 }
 
 
-/* funkcja spadek jako funkcja zwracajaca Klocek
-Klocek Spadek(char plansza[WYS][SZER], Klocek Obecny, bool *spadl)
-{
-    bool czy_mozna = true;
-
-    for (int i=0; i<4; i++)
-        if (plansza[Obecny.kwadraty[i].y+1][Obecny.kwadraty[i].x] == '#' || plansza[Obecny.kwadraty[i].y+1][Obecny.kwadraty[i].x] == 'O')
-        {
-            czy_mozna = false;
-            break;
-        }
-
-    if (czy_mozna)
-    {
-        for (int i=0; i<4; i++)
-        {
-            plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] = ' ';
-            (Obecny.kwadraty[i].y)++;
-        }
-
-        (Obecny.srodek.y)++;
-        for (int i=0; i<4; i++)
-            plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] = '+';
-
-        for (int i=0; i<Obecny.m; i++)
-            (Obecny.zakazane[i].y)++;
-    }
-    else
-    {
-        *spadl = true;
-        for (int i=0; i<4; i++)
-            plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] = '#';
-    }
-
-    return Obecny;
-}
-*/
-
-// funkcja Spadek operujaca wskaznikiem do struktury Klocek
 bool Spadek(char plansza[WYS][SZER], Klocek *Obecny)
 {
     bool czy_mozna = true;
@@ -156,6 +120,10 @@ bool Spadek(char plansza[WYS][SZER], Klocek *Obecny)
         for (int i=0; i<Obecny->m; i++)
             (Obecny->zakazane[i].y)++;
 
+        for (int i=0; i<Obecny->n; i++)
+            for (int j=0; j<Obecny->n; j++)
+                (Obecny->siatka[i][j].y)++;
+
         return false;
     }
     else
@@ -166,7 +134,6 @@ bool Spadek(char plansza[WYS][SZER], Klocek *Obecny)
         return true;
     }
 }
-
 
 
 
@@ -195,6 +162,10 @@ void Lewo(char plansza[WYS][SZER], Klocek *Obecny)
 
         for (int i=0; i<Obecny->m; i++)
             (Obecny->zakazane[i].x)--;
+
+        for (int i=0; i<Obecny->n; i++)
+            for (int j=0; j<Obecny->n; j++)
+                (Obecny->siatka[i][j].x)--;
     }
 }
 
@@ -223,6 +194,10 @@ void Prawo(char plansza[WYS][SZER], Klocek *Obecny)
 
         for (int i=0; i<Obecny->m; i++)
             (Obecny->zakazane[i].x)++;
+
+        for (int i=0; i<Obecny->n; i++)
+            for (int j=0; j<Obecny->n; j++)
+                (Obecny->siatka[i][j].x)++;
     }
 }
 
@@ -240,6 +215,12 @@ void Obrot(char plansza[WYS][SZER], Klocek *Obecny)
     if (Obecny->m == 0)
         return;
 
+    Pkt sr;
+    if (Obecny->n == 3)   // klocki z siatka 3x3
+        sr.x = sr.y = 1;
+    else    // klocek I
+        sr.x = sr.y = 2;
+
     bool czy_mozna = true;
 
     for (int i=0; i<Obecny->m; i++)
@@ -255,9 +236,19 @@ void Obrot(char plansza[WYS][SZER], Klocek *Obecny)
             plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = ' ';
 
         for (int i=0; i<4; i++)
-            ObrotPunktuWzglSrodka( &(Obecny->kwadraty[i]), Obecny->srodek);
+        {
+            Pkt pom = {Obecny->kwadraty[i].y - Obecny->siatka[0][0].y, Obecny->kwadraty[i].x - Obecny->siatka[0][0].x};
+            ObrotPunktuWzglSrodka(&pom, sr);
+            Obecny->kwadraty[i].x = Obecny->siatka[pom.x][pom.y].x;
+            Obecny->kwadraty[i].y = Obecny->siatka[pom.x][pom.y].y;
+        }
         for (int i=0; i<Obecny->m; i++)
-            ObrotPunktuWzglSrodka( &(Obecny->zakazane[i]), Obecny->srodek);
+        {
+            Pkt pom = {Obecny->zakazane[i].y - Obecny->siatka[0][0].y, Obecny->zakazane[i].x - Obecny->siatka[0][0].x};
+            ObrotPunktuWzglSrodka(&pom, sr);
+            Obecny->zakazane[i].x = Obecny->siatka[pom.x][pom.y].x;
+            Obecny->zakazane[i].y = Obecny->siatka[pom.x][pom.y].y;
+        }
 
         for (int i=0; i<4; i++)
             plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = '+';

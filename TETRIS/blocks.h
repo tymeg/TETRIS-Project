@@ -1,8 +1,8 @@
 #ifndef BLOCKS_H_INCLUDED
 #define BLOCKS_H_INCLUDED
 
-#define WYS 22
-#define SZER 12
+#define WYS 24
+#define SZER 14
 
 typedef struct
 {
@@ -11,10 +11,12 @@ typedef struct
 
 typedef struct
 {
-    int m;
+    int n; // dlugosc boku siatki
+    int m; // ilosc zakazanych pol
     Pkt srodek;
     Pkt kwadraty[4];
     Pkt zakazane[8];
+    Pkt siatka[5][5];
 
 } Klocek;
 
