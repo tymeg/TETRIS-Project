@@ -107,9 +107,19 @@ int main()
                         Obecny = Nastepny;
                         if (!RysujKlocek(plansza, Obecny))
                         {
-                            KoniecGry(plansza, Obecny, wynik);
-                            system("pause");
-                            return 0;
+                            opcja = KoniecGry(plansza, Obecny, wynik);
+                            if (opcja == 0) // RESTART
+                            {
+                                system("cls");
+                                HideCursor();
+                                Inicjalizuj(plansza);
+                                Obecny = Losuj(plansza, tab);
+                                RysujKlocek(plansza, Obecny);
+                                wynik = 0;
+                                start = time(&now);
+                            }
+                            else if (opcja == 1)    // EXIT
+                                exit(0);
                         }
                         Nastepny = Losuj(plansza, tab);
                         WstawNastepny(plansza, Obecny, Nastepny);
@@ -128,9 +138,19 @@ int main()
                     Obecny = Nastepny;
                     if (!RysujKlocek(plansza, Obecny))
                     {
-                        KoniecGry(plansza, Obecny, wynik);
-                        system("pause");
-                        return 0;
+                        opcja = KoniecGry(plansza, Obecny, wynik);
+                        if (opcja == 0) // RESTART
+                        {
+                            system("cls");
+                            HideCursor();
+                            Inicjalizuj(plansza);
+                            Obecny = Losuj(plansza, tab);
+                            RysujKlocek(plansza, Obecny);
+                            wynik = 0;
+                            start = time(&now);
+                        }
+                        else if (opcja == 1) // EXIT
+                            exit(0);
                     }
                     Nastepny = Losuj(plansza, tab);
                     WstawNastepny(plansza, Obecny, Nastepny);
@@ -150,9 +170,20 @@ int main()
             Obecny = Nastepny;
             if (!RysujKlocek(plansza, Obecny))
             {
-                KoniecGry(plansza, Obecny, wynik);
-                system("pause");
-                return 0;
+                opcja = KoniecGry(plansza, Obecny, wynik);
+                if (opcja == 0) // RESTART
+                {
+                    system("cls");
+                    HideCursor();
+                    Inicjalizuj(plansza);
+                    Obecny = Losuj(plansza, tab);
+                    RysujKlocek(plansza, Obecny);
+                    wynik = 0;
+                    Rysuj(plansza, wynik);
+                    start = time(&now);
+                }
+                else if (opcja == 1)    // EXIT
+                    exit(0);
             }
             Nastepny = Losuj(plansza, tab);
             WstawNastepny(plansza, Obecny, Nastepny);

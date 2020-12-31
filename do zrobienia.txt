@@ -3,7 +3,7 @@ how to play
 klocki zwykłe/kolorowe
 scoreboard (z użyciem pliku txt)
 przyspieszanie gry po przekroczeniu konkretnych progów punktowych
-
+ładny efekt znikania pełnych wierszy
 
 Naliczanie punktów:
 +10 - jeden wiersz (1*1*10)

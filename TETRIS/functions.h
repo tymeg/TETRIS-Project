@@ -26,7 +26,7 @@ void Obrot(char plansza[WYS][SZER], Klocek *Obecny);
 void UsunWiersz (char plansza[WYS][SZER], int wiersz);
 bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik);
 
-void KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik);
+int KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik);
 
 
 #endif // FUNCTIONS_H_INCLUDED
