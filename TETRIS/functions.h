@@ -7,9 +7,10 @@ void ClearScreen();
 void HideCursor();
 
 void Inicjalizuj(char plansza[WYS][SZER]);
-void Rysuj(char plansza[WYS][SZER]);
+void WstawNastepny(char plansza[WYS][SZER], Klocek Obecny, Klocek Nastepny);
+void Rysuj(char plansza[WYS][SZER], int wynik);
 
-void Pauza();
+int Pauza();
 
 Klocek Losuj(char plansza[WYS][SZER], Klocek tab[7]);
 bool RysujKlocek(char plansza[WYS][SZER], Klocek Obecny);
@@ -23,9 +24,9 @@ void ObrotPunktuWzglSrodka (Pkt *p, Pkt sr);
 void Obrot(char plansza[WYS][SZER], Klocek *Obecny);
 
 void UsunWiersz (char plansza[WYS][SZER], int wiersz);
-bool SprawdzWiersze (char plansza[WYS][SZER]);
+bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik);
 
-void KoniecGry(char plansza[WYS][SZER], Klocek Obecny);
+void KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik);
 
 
 #endif // FUNCTIONS_H_INCLUDED

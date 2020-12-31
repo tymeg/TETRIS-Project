@@ -2,7 +2,7 @@
 #define BLOCKS_H_INCLUDED
 
 #define WYS 24
-#define SZER 14
+#define SZER 20
 
 typedef struct
 {

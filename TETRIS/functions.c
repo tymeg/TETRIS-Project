@@ -30,24 +30,37 @@ void HideCursor()
 
 void Inicjalizuj(char plansza[WYS][SZER])
 {
-    for (int i=0; i<14; i++)
+    for (int i=0; i<20; i++)
         plansza[0][i] = plansza[23][i] = ' ';
 
-    plansza[1][0] = plansza[1][13] = plansza[22][0] = plansza[22][13] = ' ';
+    plansza[1][0] = plansza[22][0] = ' ';
 
-    for (int i=1; i<13; i++)
+    for (int i=1; i<20; i++)
         plansza[1][i] = plansza[22][i] = 'O';
 
     for (int j=2; j<22; j++)
     {
-        plansza[j][0] = plansza[j][13] = ' ';
-        plansza[j][1] = plansza[j][12] = 'O';
+        plansza[j][0] = ' ';
+        plansza[j][1] = plansza[j][12] = plansza[j][19] = 'O';
         for (int k=2; k<12; k++)
+            plansza[j][k] = ' ';
+        for (int k=13; k<19; k++)
             plansza[j][k] = ' ';
     }
 }
 
-void Rysuj(char plansza[WYS][SZER])
+void WstawNastepny(char plansza[WYS][SZER], Klocek Obecny, Klocek Nastepny)
+{
+    plansza[8][14] = 'N', plansza[8][15] = 'E', plansza[8][16] = 'X', plansza[8][17] = 'T', plansza[8][18] = ':';
+
+    for (int i=0; i<4; i++)
+        plansza[Obecny.kwadraty[i].y+8][Obecny.kwadraty[i].x+9] = ' ';
+
+    for (int i=0; i<4; i++)
+        plansza[Nastepny.kwadraty[i].y+8][Nastepny.kwadraty[i].x+9] = '+';
+}
+
+void Rysuj(char plansza[WYS][SZER], int wynik)
 {
     for (int i=0; i<WYS; i++)
     {
@@ -55,29 +68,26 @@ void Rysuj(char plansza[WYS][SZER])
             printf("%c", plansza[i][j]);
         printf("\n");
     }
+    printf("SCORE: %d\n\n[ESC] PAUSE", wynik);
 }
 
-void Pauza()
+int Pauza()
 {
     int znak;
-    printf("PAUSE\n");
+    printf("\rPAUSE      \n[ESC] RESUME\n[R]   RESTART\n");
     while (1)
     {
         if (kbhit())
         {
             znak = getch();
             if (znak == 27) // ESC - resume
-                return;
-            else if (znak == 'm') // M - menu
-            {
-                printf("MENU\n");
-                return;
-            }
+                return 0;
             else if (znak == 'r') // R - restart
-            {
-                printf("RESTART\n");
-                return;
-            }
+                return 1;
+            /*
+            else if (znak == 'm') // M - menu
+                return 2;
+            */
         }
         else
             Sleep(100);
@@ -292,15 +302,16 @@ void UsunWiersz (char plansza[WYS][SZER], int wiersz)
 
 }
 
-bool SprawdzWiersze (char plansza[WYS][SZER])
+bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik)
 {
+    int licz = 0;
     bool usunieto = false;
 
-    for (int i=2; i<22; i++)
+    for (int i=wiersz; i<22; i++)
     {
         bool pelny = true;
         for (int j=2; j<12; j++)
-            if (plansza[i][j] == ' ')
+            if (plansza[i][j] == ' ' || plansza[i][j] == 'O')
             {
                 pelny = false;
                 break;
@@ -309,19 +320,21 @@ bool SprawdzWiersze (char plansza[WYS][SZER])
         {
             usunieto = true;
             UsunWiersz(plansza, i);
+            licz++;
         }
     }
+    *wynik += licz*licz*10;
     return usunieto;
 }
 
-void KoniecGry(char plansza[WYS][SZER], Klocek Obecny)
+void KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik)
 {
     ClearScreen();
-    Rysuj(plansza);
+    Rysuj(plansza, wynik);
     Sleep(1000);
     Spadek(plansza, &Obecny);
     ClearScreen();
-    Rysuj(plansza);
-    printf("GAME OVER\n\n");
+    Rysuj(plansza, wynik);
+    printf("\rGAME OVER  \n\n");
     Sleep(1000);
 }

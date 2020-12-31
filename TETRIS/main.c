@@ -34,11 +34,14 @@ int main()
     RysujKlocek(plansza, Obecny);
     Klocek Nastepny = Losuj(plansza, tab);
 
-    int znak;
+    WstawNastepny(plansza, Obecny, Nastepny);
+
+    int wynik = 0;
+    int znak, opcja;
     time_t now, start;
     while (1)
     {
-        Rysuj(plansza);
+        Rysuj(plansza, wynik);
         start = time(&now);
         while( (time(&now) - start) < 1 ) // Potem powinno przyspieszac
         {
@@ -46,82 +49,113 @@ int main()
             {
                 znak = getch();
                 if (znak == 27) // ESC - pause
-                    Pauza();
+                {
+                    opcja = Pauza();
+                    if (opcja == 0) // RESUME
+                    {
+                        system("cls");
+                        HideCursor();
+                        Rysuj(plansza, wynik);
+                    }
+                    else if (opcja == 1) // RESTART
+                    {
+                        system("cls");
+                        HideCursor();
+                        Inicjalizuj(plansza);
+                        Obecny = Losuj(plansza, tab);
+                        RysujKlocek(plansza, Obecny);
+                        Nastepny = Losuj(plansza, tab);
+                        WstawNastepny(plansza, Obecny, Nastepny);
+                        wynik = 0;
+                        Rysuj(plansza, wynik);
+                        start = time(&now);
+                    }
+                    /*
+                    else    // MENU
+                    {
+
+                    }
+                    */
+                }
                 else if (znak == 'w')
                 {
                     Obrot(plansza, &Obecny);
                     ClearScreen();
-                    Rysuj(plansza);
+                    Rysuj(plansza, wynik);
                 }
                 else if (znak == 'a')   // Lewo
                 {
                     Lewo(plansza, &Obecny);
                     ClearScreen();
-                    Rysuj(plansza);
+                    Rysuj(plansza, wynik);
                 }
                 else if (znak == 'd')   // Prawo
                 {
                     Prawo(plansza, &Obecny);
                     ClearScreen();
-                    Rysuj(plansza);
+                    Rysuj(plansza, wynik);
                 }
                 else if (znak == 's')   // Dol
                 {
                     if (Spadek(plansza, &Obecny))
                     {
-                        if (SprawdzWiersze(plansza))
+                        if (SprawdzWiersze(plansza, Obecny.srodek.y - 2, &wynik))    // od wiersza rownego srodek klocka, ktory spadl - 2
                         {
                             ClearScreen();
-                            Rysuj(plansza);
+                            Rysuj(plansza, wynik);
                         }
                         Obecny = Nastepny;
                         if (!RysujKlocek(plansza, Obecny))
                         {
-                            KoniecGry(plansza, Obecny);
+                            KoniecGry(plansza, Obecny, wynik);
                             system("pause");
                             return 0;
                         }
                         Nastepny = Losuj(plansza, tab);
+                        WstawNastepny(plansza, Obecny, Nastepny);
                     }
                     ClearScreen();
-                    Rysuj(plansza);
+                    Rysuj(plansza, wynik);
                 }
                 else if (znak == 13)   // ENTER - spadek na sam dol
                 {
                     while (!Spadek(plansza, &Obecny));
-                    if (SprawdzWiersze(plansza))
+                    if (SprawdzWiersze(plansza, Obecny.srodek.y - 2, &wynik))
                     {
                         ClearScreen();
-                        Rysuj(plansza);
+                        Rysuj(plansza, wynik);
                     }
                     Obecny = Nastepny;
                     if (!RysujKlocek(plansza, Obecny))
                     {
-                        KoniecGry(plansza, Obecny);
+                        KoniecGry(plansza, Obecny, wynik);
                         system("pause");
                         return 0;
                     }
                     Nastepny = Losuj(plansza, tab);
+                    WstawNastepny(plansza, Obecny, Nastepny);
                     ClearScreen();
-                    Rysuj(plansza);
+                    Rysuj(plansza, wynik);
                 }
             }
         }
         if (Spadek(plansza, &Obecny))
         {
-            if (SprawdzWiersze(plansza))
+
+            if (SprawdzWiersze(plansza, Obecny.srodek.y - 2, &wynik))
             {
                 ClearScreen();
-                Rysuj(plansza);
+                Rysuj(plansza, wynik);
             }
             Obecny = Nastepny;
             if (!RysujKlocek(plansza, Obecny))
             {
-                KoniecGry(plansza, Obecny);
+                KoniecGry(plansza, Obecny, wynik);
                 system("pause");
                 return 0;
             }
             Nastepny = Losuj(plansza, tab);
+            WstawNastepny(plansza, Obecny, Nastepny);
         }
         ClearScreen();
         //system("cls");
