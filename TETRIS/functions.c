@@ -136,12 +136,14 @@ bool WstawKlocek(char plansza[WYS][SZER], Klocek Obecny, Klocek Cien)
     for (int i=0; i<4; i++)
     {
         if (plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] != '#')
-        {
             plansza[Cien.kwadraty[i].y][Cien.kwadraty[i].x] = '-';
-            plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] = '+';
-        }
         else
             pom = false;
+    }
+    for (int i=0; i<4; i++)
+    {
+        if (plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] != '#')
+            plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] = '+';
     }
     return pom;
 }
