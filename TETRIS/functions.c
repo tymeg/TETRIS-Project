@@ -331,7 +331,7 @@ void UsunWiersz (char plansza[WYS][SZER], int wiersz)
 
 }
 
-bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik)
+bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik, double predkosc)
 {
     int licz = 0;
     bool usunieto = false;
@@ -347,9 +347,16 @@ bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik)
             }
         if (pelny)
         {
+            for (int j=2; j<12; j++)
+                plansza[i][j] = 'x';
+            ClearScreen();
+            Rysuj(plansza, *wynik, predkosc);
+            Sleep(200);
             usunieto = true;
             UsunWiersz(plansza, i);
             licz++;
+            ClearScreen();
+            Rysuj(plansza, *wynik, predkosc);
         }
     }
     *wynik += licz*licz*10;

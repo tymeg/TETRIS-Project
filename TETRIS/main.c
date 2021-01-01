@@ -114,8 +114,9 @@ int main()
                 {
                     if (Spadek(plansza, &Obecny, 0))
                     {
-                        if (SprawdzWiersze(plansza, Obecny.srodek.y - 2, &wynik))    // od wiersza rownego srodek klocka, ktory spadl - 2
+                        if (SprawdzWiersze(plansza, Obecny.srodek.y - 2, &wynik, predkosc))    // od wiersza rownego srodek klocka, ktory spadl - 2
                         {
+                            start = clock();
                             ClearScreen();
                             Rysuj(plansza, wynik, predkosc);
                         }
@@ -150,8 +151,9 @@ int main()
                 else if (znak == 13)   // ENTER - spadek na sam dol
                 {
                     while (!Spadek(plansza, &Obecny, 0));
-                    if (SprawdzWiersze(plansza, Obecny.srodek.y - 2, &wynik))
+                    if (SprawdzWiersze(plansza, Obecny.srodek.y - 2, &wynik, predkosc))
                     {
+                        start = clock();
                         ClearScreen();
                         Rysuj(plansza, wynik, predkosc);
                     }
@@ -184,7 +186,7 @@ int main()
         }
         if (Spadek(plansza, &Obecny, 0))
         {
-            if (SprawdzWiersze(plansza, Obecny.srodek.y - 2, &wynik))
+            if (SprawdzWiersze(plansza, Obecny.srodek.y - 2, &wynik, predkosc))
             {
                 ClearScreen();
                 Rysuj(plansza, wynik, predkosc);

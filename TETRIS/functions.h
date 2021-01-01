@@ -25,7 +25,7 @@ void ObrotPunktuWzglSrodka (Pkt *p, Pkt sr);
 void Obrot(char plansza[WYS][SZER], Klocek *Obecny, Klocek *Cien);
 
 void UsunWiersz (char plansza[WYS][SZER], int wiersz);
-bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik);
+bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik, double predkosc);
 
 int KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik, double predkosc);
 
