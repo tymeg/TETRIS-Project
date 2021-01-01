@@ -66,7 +66,21 @@ void WstawNastepny(char plansza[WYS][SZER], Klocek Obecny, Klocek Nastepny)
         plansza[Nastepny.kwadraty[i].y+5][Nastepny.kwadraty[i].x+10] = '+';
 }
 
-void Rysuj(char plansza[WYS][SZER], int wynik)
+void UstawPredkosc(double *predkosc, int wynik)
+{
+    if (*predkosc == 1 && wynik >= 500)
+        *predkosc = 0.75;
+    else if (*predkosc == 0.75 && wynik >= 1000)
+        *predkosc = 0.5;
+    else if (*predkosc == 0.5 && wynik >= 2000)
+        *predkosc = 0.2;
+    else if (*predkosc == 0.2 && wynik >= 3000)
+        *predkosc = 0.1;
+    else if (*predkosc == 0.1 && wynik >= 5000)
+        *predkosc = 0.05;
+}
+
+void Rysuj(char plansza[WYS][SZER], int wynik, double predkosc)
 {
     for (int i=0; i<WYS; i++)
     {
@@ -74,7 +88,16 @@ void Rysuj(char plansza[WYS][SZER], int wynik)
             printf("%c", plansza[i][j]);
         printf("\n");
     }
-    printf("SCORE: %d\n\n[ESC] PAUSE", wynik);
+
+    if (predkosc == 0.75)
+        predkosc = 2;
+    else if (predkosc == 0.5)
+        predkosc = 3;
+    else if (predkosc == 0.2)
+        predkosc = 4;
+    else if (predkosc == 0.1)
+        predkosc = 5;
+    printf("SCORE: %d\nSPEED: %d\n\n[ESC] PAUSE", wynik, (int)predkosc);
 }
 
 int Pauza()
@@ -106,21 +129,24 @@ Klocek Losuj(char plansza[WYS][SZER], Klocek tab[7])
     return tab[los];
 }
 
-bool RysujKlocek(char plansza[WYS][SZER], Klocek Obecny)
+bool WstawKlocek(char plansza[WYS][SZER], Klocek Obecny, Klocek Cien)
 {
     bool pom = true;
 
     for (int i=0; i<4; i++)
     {
         if (plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] != '#')
+        {
+            plansza[Cien.kwadraty[i].y][Cien.kwadraty[i].x] = '-';
             plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] = '+';
+        }
         else
             pom = false;
     }
     return pom;
 }
 
-bool Spadek(char plansza[WYS][SZER], Klocek *Obecny)
+bool Spadek(char plansza[WYS][SZER], Klocek *Obecny, bool czy_cien)
 {
     bool czy_mozna = true;
 
@@ -140,8 +166,6 @@ bool Spadek(char plansza[WYS][SZER], Klocek *Obecny)
         }
 
         (Obecny->srodek.y)++;
-        for (int i=0; i<4; i++)
-            plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = '+';
 
         for (int i=0; i<Obecny->m; i++)
             (Obecny->zakazane[i].y)++;
@@ -154,8 +178,9 @@ bool Spadek(char plansza[WYS][SZER], Klocek *Obecny)
     }
     else
     {
-        for (int i=0; i<4; i++)
-            plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = '#';
+        if (!czy_cien)
+            for (int i=0; i<4; i++)
+                plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = '#';
 
         return true;
     }
@@ -163,7 +188,7 @@ bool Spadek(char plansza[WYS][SZER], Klocek *Obecny)
 
 
 
-void Lewo(char plansza[WYS][SZER], Klocek *Obecny)
+void Lewo(char plansza[WYS][SZER], Klocek *Obecny, Klocek *Cien)
 {
     bool czy_mozna = true;
 
@@ -179,12 +204,11 @@ void Lewo(char plansza[WYS][SZER], Klocek *Obecny)
         for (int i=0; i<4; i++)
         {
             plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = ' ';
+            plansza[Cien->kwadraty[i].y][Cien->kwadraty[i].x] = ' ';
             (Obecny->kwadraty[i].x)--;
         }
 
         (Obecny->srodek.x)--;
-        for (int i=0; i<4; i++)
-            plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = '+';
 
         for (int i=0; i<Obecny->m; i++)
             (Obecny->zakazane[i].x)--;
@@ -195,7 +219,7 @@ void Lewo(char plansza[WYS][SZER], Klocek *Obecny)
     }
 }
 
-void Prawo(char plansza[WYS][SZER], Klocek *Obecny)
+void Prawo(char plansza[WYS][SZER], Klocek *Obecny, Klocek *Cien)
 {
     bool czy_mozna = true;
 
@@ -211,12 +235,11 @@ void Prawo(char plansza[WYS][SZER], Klocek *Obecny)
         for (int i=0; i<4; i++)
         {
             plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = ' ';
+            plansza[Cien->kwadraty[i].y][Cien->kwadraty[i].x] = ' ';
             (Obecny->kwadraty[i].x)++;
         }
 
         (Obecny->srodek.x)++;
-        for (int i=0; i<4; i++)
-            plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = '+';
 
         for (int i=0; i<Obecny->m; i++)
             (Obecny->zakazane[i].x)++;
@@ -236,7 +259,7 @@ void ObrotPunktuWzglSrodka (Pkt *p, Pkt sr)
     p->y = yp;
 }
 
-void Obrot(char plansza[WYS][SZER], Klocek *Obecny)
+void Obrot(char plansza[WYS][SZER], Klocek *Obecny, Klocek *Cien)
 {
     if (Obecny->m == 0)
         return;
@@ -244,7 +267,7 @@ void Obrot(char plansza[WYS][SZER], Klocek *Obecny)
     Pkt sr;
     if (Obecny->n == 3)   // klocki z siatka 3x3
         sr.x = sr.y = 1;
-    else    // klocek I
+    else    // klocek I z siatka 5x5
         sr.x = sr.y = 2;
 
     bool czy_mozna = true;
@@ -259,7 +282,10 @@ void Obrot(char plansza[WYS][SZER], Klocek *Obecny)
     if (czy_mozna)
     {
         for (int i=0; i<4; i++)
+        {
             plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = ' ';
+            plansza[Cien->kwadraty[i].y][Cien->kwadraty[i].x] = ' ';
+        }
 
         for (int i=0; i<4; i++)
         {
@@ -275,9 +301,6 @@ void Obrot(char plansza[WYS][SZER], Klocek *Obecny)
             Obecny->zakazane[i].x = Obecny->siatka[pom.x][pom.y].x;
             Obecny->zakazane[i].y = Obecny->siatka[pom.x][pom.y].y;
         }
-
-        for (int i=0; i<4; i++)
-            plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = '+';
     }
 
 }
@@ -333,14 +356,14 @@ bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik)
     return usunieto;
 }
 
-int KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik)
+int KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik, double predkosc)
 {
     ClearScreen();
-    Rysuj(plansza, wynik);
+    Rysuj(plansza, wynik, predkosc);
     Sleep(1000);
-    Spadek(plansza, &Obecny);
+    Spadek(plansza, &Obecny, 0);
     ClearScreen();
-    Rysuj(plansza, wynik);
+    Rysuj(plansza, wynik, predkosc);
     Sleep(1000);
     printf("\rGAME OVER  \n\n[R]  RESTART\n[ESC] EXIT");
 

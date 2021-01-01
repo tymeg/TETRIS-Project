@@ -31,19 +31,23 @@ int main()
 
     srand(time(NULL));
     Klocek Obecny = Losuj(plansza, tab);
-    RysujKlocek(plansza, Obecny);
+    Klocek Cien = Obecny;
+    while(!Spadek(plansza, &Cien, 1));
+    WstawKlocek(plansza, Obecny, Cien);
     Klocek Nastepny = Losuj(plansza, tab);
 
     WstawNastepny(plansza, Obecny, Nastepny);
 
     int wynik = 0;
     int znak, opcja;
-    time_t now, start;
+    double predkosc = 1;
+    clock_t start;
     while (1)
     {
-        Rysuj(plansza, wynik);
-        start = time(&now);
-        while( (time(&now) - start) < 1 ) // Potem powinno przyspieszac
+        UstawPredkosc(&predkosc, wynik);
+        Rysuj(plansza, wynik, predkosc);
+        start = clock();
+        while( ( ((double)(clock() - start))/CLOCKS_PER_SEC ) < predkosc )
         {
             if (kbhit())
             {
@@ -55,20 +59,22 @@ int main()
                     {
                         system("cls");
                         HideCursor();
-                        Rysuj(plansza, wynik);
+                        Rysuj(plansza, wynik, predkosc);
                     }
                     else if (opcja == 1) // RESTART
                     {
                         system("cls");
                         HideCursor();
                         Inicjalizuj(plansza);
-                        Obecny = Losuj(plansza, tab);
-                        RysujKlocek(plansza, Obecny);
+                        Cien = Obecny = Losuj(plansza, tab);
+                        while(!Spadek(plansza, &Cien, 1));
+                        WstawKlocek(plansza, Obecny, Cien);
                         Nastepny = Losuj(plansza, tab);
                         WstawNastepny(plansza, Obecny, Nastepny);
                         wynik = 0;
-                        Rysuj(plansza, wynik);
-                        start = time(&now);
+                        predkosc = 1;
+                        Rysuj(plansza, wynik, predkosc);
+                        start = clock();
                     }
                     /*
                     else    // MENU
@@ -77,46 +83,58 @@ int main()
                     }
                     */
                 }
-                else if (znak == 'w')
+                else if (znak == 'w')   // Obrot
                 {
-                    Obrot(plansza, &Obecny);
+                    Obrot(plansza, &Obecny, &Cien);
+                    Cien = Obecny;
+                    while(!Spadek(plansza, &Cien, 1));
+                    WstawKlocek(plansza, Obecny, Cien);
                     ClearScreen();
-                    Rysuj(plansza, wynik);
+                    Rysuj(plansza, wynik, predkosc);
                 }
                 else if (znak == 'a')   // Lewo
                 {
-                    Lewo(plansza, &Obecny);
+                    Lewo(plansza, &Obecny, &Cien);
+                    Cien = Obecny;
+                    while(!Spadek(plansza, &Cien, 1));
+                    WstawKlocek(plansza, Obecny, Cien);
                     ClearScreen();
-                    Rysuj(plansza, wynik);
+                    Rysuj(plansza, wynik, predkosc);
                 }
                 else if (znak == 'd')   // Prawo
                 {
-                    Prawo(plansza, &Obecny);
+                    Prawo(plansza, &Obecny, &Cien);
+                    Cien = Obecny;
+                    while(!Spadek(plansza, &Cien, 1));
+                    WstawKlocek(plansza, Obecny, Cien);
                     ClearScreen();
-                    Rysuj(plansza, wynik);
+                    Rysuj(plansza, wynik, predkosc);
                 }
                 else if (znak == 's')   // Dol
                 {
-                    if (Spadek(plansza, &Obecny))
+                    if (Spadek(plansza, &Obecny, 0))
                     {
                         if (SprawdzWiersze(plansza, Obecny.srodek.y - 2, &wynik))    // od wiersza rownego srodek klocka, ktory spadl - 2
                         {
                             ClearScreen();
-                            Rysuj(plansza, wynik);
+                            Rysuj(plansza, wynik, predkosc);
                         }
-                        Obecny = Nastepny;
-                        if (!RysujKlocek(plansza, Obecny))
+                        Cien = Obecny = Nastepny;
+                        while(!Spadek(plansza, &Cien, 1));
+                        if (!WstawKlocek(plansza, Obecny, Cien))
                         {
-                            opcja = KoniecGry(plansza, Obecny, wynik);
+                            opcja = KoniecGry(plansza, Obecny, wynik, predkosc);
                             if (opcja == 0) // RESTART
                             {
                                 system("cls");
                                 HideCursor();
                                 Inicjalizuj(plansza);
-                                Obecny = Losuj(plansza, tab);
-                                RysujKlocek(plansza, Obecny);
+                                Cien = Obecny = Losuj(plansza, tab);
+                                while(!Spadek(plansza, &Cien, 1));
+                                WstawKlocek(plansza, Obecny, Cien);
+                                predkosc = 1;
                                 wynik = 0;
-                                start = time(&now);
+                                start = clock();
                             }
                             else if (opcja == 1)    // EXIT
                                 exit(0);
@@ -124,30 +142,35 @@ int main()
                         Nastepny = Losuj(plansza, tab);
                         WstawNastepny(plansza, Obecny, Nastepny);
                     }
+                    else
+                        WstawKlocek(plansza, Obecny, Cien);
                     ClearScreen();
-                    Rysuj(plansza, wynik);
+                    Rysuj(plansza, wynik, predkosc);
                 }
                 else if (znak == 13)   // ENTER - spadek na sam dol
                 {
-                    while (!Spadek(plansza, &Obecny));
+                    while (!Spadek(plansza, &Obecny, 0));
                     if (SprawdzWiersze(plansza, Obecny.srodek.y - 2, &wynik))
                     {
                         ClearScreen();
-                        Rysuj(plansza, wynik);
+                        Rysuj(plansza, wynik, predkosc);
                     }
-                    Obecny = Nastepny;
-                    if (!RysujKlocek(plansza, Obecny))
+                    Cien = Obecny = Nastepny;
+                    while(!Spadek(plansza, &Cien, 1));
+                    if (!WstawKlocek(plansza, Obecny, Cien))
                     {
-                        opcja = KoniecGry(plansza, Obecny, wynik);
+                        opcja = KoniecGry(plansza, Obecny, wynik, predkosc);
                         if (opcja == 0) // RESTART
                         {
                             system("cls");
                             HideCursor();
                             Inicjalizuj(plansza);
-                            Obecny = Losuj(plansza, tab);
-                            RysujKlocek(plansza, Obecny);
+                            Cien = Obecny = Losuj(plansza, tab);
+                            while(!Spadek(plansza, &Cien, 1));
+                            WstawKlocek(plansza, Obecny, Cien);
+                            predkosc = 1;
                             wynik = 0;
-                            start = time(&now);
+                            start = clock();
                         }
                         else if (opcja == 1) // EXIT
                             exit(0);
@@ -155,32 +178,34 @@ int main()
                     Nastepny = Losuj(plansza, tab);
                     WstawNastepny(plansza, Obecny, Nastepny);
                     ClearScreen();
-                    Rysuj(plansza, wynik);
+                    Rysuj(plansza, wynik, predkosc);
                 }
             }
         }
-        if (Spadek(plansza, &Obecny))
+        if (Spadek(plansza, &Obecny, 0))
         {
-
             if (SprawdzWiersze(plansza, Obecny.srodek.y - 2, &wynik))
             {
                 ClearScreen();
-                Rysuj(plansza, wynik);
+                Rysuj(plansza, wynik, predkosc);
             }
-            Obecny = Nastepny;
-            if (!RysujKlocek(plansza, Obecny))
+            Cien = Obecny = Nastepny;
+            while(!Spadek(plansza, &Cien, 1));
+            if (!WstawKlocek(plansza, Obecny, Cien))
             {
-                opcja = KoniecGry(plansza, Obecny, wynik);
+                opcja = KoniecGry(plansza, Obecny, wynik, predkosc);
                 if (opcja == 0) // RESTART
                 {
                     system("cls");
                     HideCursor();
                     Inicjalizuj(plansza);
-                    Obecny = Losuj(plansza, tab);
-                    RysujKlocek(plansza, Obecny);
+                    Cien = Obecny = Losuj(plansza, tab);
+                    while(!Spadek(plansza, &Cien, 1));
+                    WstawKlocek(plansza, Obecny, Cien);
                     wynik = 0;
-                    Rysuj(plansza, wynik);
-                    start = time(&now);
+                    predkosc = 1;
+                    Rysuj(plansza, wynik, predkosc);
+                    start = clock();
                 }
                 else if (opcja == 1)    // EXIT
                     exit(0);
@@ -188,6 +213,8 @@ int main()
             Nastepny = Losuj(plansza, tab);
             WstawNastepny(plansza, Obecny, Nastepny);
         }
+        else
+            WstawKlocek(plansza, Obecny, Cien);
         ClearScreen();
         //system("cls");
 
