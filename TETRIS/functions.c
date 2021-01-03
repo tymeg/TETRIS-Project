@@ -28,6 +28,67 @@ void HideCursor()
     SetConsoleCursorInfo(hOut, &ConCurInf);
 }
 
+void Menu()
+{
+    int znak;
+    while(1)
+    {
+        system("cls");
+        printf("\n");
+        printf(" ### ### ### ##  # ###\n");
+        printf("  #  #    #  # # # #  \n");
+        printf("  #  ##   #  ##  # ###\n");
+        printf("  #  #    #  # # #   #\n");
+        printf("  #  ###  #  # # # ###\n");
+        printf("                by    \n");
+        printf("                 TYMEG\n\n");
+        printf("     [1] START\n");
+        printf("     [2] HOW TO PLAY\n");
+        printf("     [3] OPTIONS\n");
+        printf("     [4] SCOREBOARD\n");
+        printf("     [5] EXIT\n");
+
+        while(1)
+        {
+            znak = getch();
+            if (znak == '1')    // START
+                return;
+            else if (znak == '2') // HOW TO PLAY
+            {
+                system("cls");
+                printf("\n [ESC] BACK\n\n\n");
+                printf("     W   - Rotate\n");
+                printf("     S   - Down\n");
+                printf("     A   - Left\n");
+                printf("     D   - Right\n");
+                printf("   ENTER - Drop\n");
+
+                while(1)
+                {
+                    znak = getch();
+                    if (znak == 27) // ESC
+                        goto menu;
+                }
+            }
+            /*
+            else if (znak == '3') // OPTIONS
+            {
+
+            }
+            else if (znak == '4') // SCOREBOARD
+            {
+
+            }
+            */
+            else if (znak == '5') // EXIT
+                exit(0);
+        }
+        menu:;
+    }
+
+}
+
+
 void Inicjalizuj(char plansza[WYS][SZER])
 {
     for (int i=0; i<21; i++)
@@ -103,23 +164,18 @@ void Rysuj(char plansza[WYS][SZER], int wynik, double predkosc)
 int Pauza()
 {
     int znak;
-    printf("\rPAUSE      \n[ESC] RESUME\n[R]   RESTART\n");
+    printf("\rPAUSE      \n[ESC] RESUME\n[R]   RESTART\n[M]   MENU\n[X]   EXIT\n");
     while (1)
     {
-        if (kbhit())
-        {
-            znak = getch();
-            if (znak == 27) // ESC - resume
-                return 0;
-            else if (znak == 'r') // R - restart
-                return 1;
-            /*
-            else if (znak == 'm') // M - menu
-                return 2;
-            */
-        }
-        else
-            Sleep(100);
+        znak = getch();
+        if (znak == 27) // ESC - resume
+            return 0;
+        else if (znak == 'r') // R - restart
+            return 1;
+        else if (znak == 'm') // M - menu
+            return 2;
+        else if (znak == 'x') // X - exit
+            return 3;
     }
 }
 
@@ -374,7 +430,7 @@ int KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik, double predkosc
     ClearScreen();
     Rysuj(plansza, wynik, predkosc);
     Sleep(1000);
-    printf("\rGAME OVER  \n\n[R]  RESTART\n[ESC] EXIT");
+    printf("\rGAME OVER  \n\n[R]   RESTART\n[M]   MENU\n[ESC] EXIT");
 
     int znak;
     while (1)
@@ -384,12 +440,10 @@ int KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik, double predkosc
             znak = getch();
             if (znak == 'r') // R - restart
                 return 0;
-            else if (znak == 27) // ESC - exit
-                return 1;
-            /*
             else if (znak == 'm') // M - menu
+                return 1;
+            else if (znak == 27) // ESC - exit
                 return 2;
-            */
         }
         else
             Sleep(100);

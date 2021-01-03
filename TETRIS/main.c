@@ -10,7 +10,8 @@
 
 int main()
 {
-    ClearScreen();
+    Menu();
+    system("cls");
     HideCursor();
 
     // INICJALIZACJA PLANSZY
@@ -55,13 +56,18 @@ int main()
                 if (znak == 27) // ESC - pause
                 {
                     opcja = Pauza();
-                    if (opcja == 0) // RESUME
+                    if (opcja == 3)    // EXIT
+                        exit(0);
+                    else if (opcja == 0) // RESUME
                     {
                         system("cls");
                         HideCursor();
                         Rysuj(plansza, wynik, predkosc);
                     }
-                    else if (opcja == 1) // RESTART
+                    else if (opcja == 2)    // MENU
+                        Menu();
+                    // RESTART (opcja == 1)
+                    if (opcja == 2 || opcja == 1)   // RESTART (z menu lub z pauzy)
                     {
                         system("cls");
                         HideCursor();
@@ -76,12 +82,6 @@ int main()
                         Rysuj(plansza, wynik, predkosc);
                         start = clock();
                     }
-                    /*
-                    else    // MENU
-                    {
-
-                    }
-                    */
                 }
                 else if (znak == 'w')   // Obrot
                 {
@@ -125,20 +125,21 @@ int main()
                         if (!WstawKlocek(plansza, Obecny, Cien))
                         {
                             opcja = KoniecGry(plansza, Obecny, wynik, predkosc);
-                            if (opcja == 0) // RESTART
-                            {
-                                system("cls");
-                                HideCursor();
-                                Inicjalizuj(plansza);
-                                Cien = Obecny = Losuj(plansza, tab);
-                                while(!Spadek(plansza, &Cien, 1));
-                                WstawKlocek(plansza, Obecny, Cien);
-                                predkosc = 1;
-                                wynik = 0;
-                                start = clock();
-                            }
-                            else if (opcja == 1)    // EXIT
+                            if (opcja == 2)    // EXIT
                                 exit(0);
+                            else if (opcja == 1)    // MENU
+                                Menu();
+                            // RESTART (opcja == 0)
+                            system("cls");
+                            HideCursor();
+                            Inicjalizuj(plansza);
+                            Cien = Obecny = Losuj(plansza, tab);
+                            while(!Spadek(plansza, &Cien, 1));
+                            WstawKlocek(plansza, Obecny, Cien);
+                            wynik = 0;
+                            predkosc = 1;
+                            Rysuj(plansza, wynik, predkosc);
+                            start = clock();
                         }
                         Nastepny = Losuj(plansza, tab);
                         WstawNastepny(plansza, Obecny, Nastepny);
@@ -162,20 +163,21 @@ int main()
                     if (!WstawKlocek(plansza, Obecny, Cien))
                     {
                         opcja = KoniecGry(plansza, Obecny, wynik, predkosc);
-                        if (opcja == 0) // RESTART
-                        {
-                            system("cls");
-                            HideCursor();
-                            Inicjalizuj(plansza);
-                            Cien = Obecny = Losuj(plansza, tab);
-                            while(!Spadek(plansza, &Cien, 1));
-                            WstawKlocek(plansza, Obecny, Cien);
-                            predkosc = 1;
-                            wynik = 0;
-                            start = clock();
-                        }
-                        else if (opcja == 1) // EXIT
+                        if (opcja == 2)    // EXIT
                             exit(0);
+                        else if (opcja == 1)    // MENU
+                            Menu();
+                        // RESTART (opcja == 0)
+                        system("cls");
+                        HideCursor();
+                        Inicjalizuj(plansza);
+                        Cien = Obecny = Losuj(plansza, tab);
+                        while(!Spadek(plansza, &Cien, 1));
+                        WstawKlocek(plansza, Obecny, Cien);
+                        wynik = 0;
+                        predkosc = 1;
+                        Rysuj(plansza, wynik, predkosc);
+                        start = clock();
                     }
                     Nastepny = Losuj(plansza, tab);
                     WstawNastepny(plansza, Obecny, Nastepny);
@@ -196,21 +198,21 @@ int main()
             if (!WstawKlocek(plansza, Obecny, Cien))
             {
                 opcja = KoniecGry(plansza, Obecny, wynik, predkosc);
-                if (opcja == 0) // RESTART
-                {
-                    system("cls");
-                    HideCursor();
-                    Inicjalizuj(plansza);
-                    Cien = Obecny = Losuj(plansza, tab);
-                    while(!Spadek(plansza, &Cien, 1));
-                    WstawKlocek(plansza, Obecny, Cien);
-                    wynik = 0;
-                    predkosc = 1;
-                    Rysuj(plansza, wynik, predkosc);
-                    start = clock();
-                }
-                else if (opcja == 1)    // EXIT
+                if (opcja == 2)    // EXIT
                     exit(0);
+                else if (opcja == 1)    // MENU
+                    Menu();
+                // RESTART (opcja == 0)
+                system("cls");
+                HideCursor();
+                Inicjalizuj(plansza);
+                Cien = Obecny = Losuj(plansza, tab);
+                while(!Spadek(plansza, &Cien, 1));
+                WstawKlocek(plansza, Obecny, Cien);
+                wynik = 0;
+                predkosc = 1;
+                Rysuj(plansza, wynik, predkosc);
+                start = clock();
             }
             Nastepny = Losuj(plansza, tab);
             WstawNastepny(plansza, Obecny, Nastepny);

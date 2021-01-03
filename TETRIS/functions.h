@@ -6,6 +6,7 @@
 void ClearScreen();
 void HideCursor();
 
+void Menu();
 void Inicjalizuj(char plansza[WYS][SZER]);
 void WstawNastepny(char plansza[WYS][SZER], Klocek Obecny, Klocek Nastepny);
 void UstawPredkosc(double *predkosc, int wynik);
