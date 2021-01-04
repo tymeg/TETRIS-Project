@@ -10,9 +10,9 @@
 
 int main()
 {
+    HideCursor();
     Menu();
     system("cls");
-    HideCursor();
 
     // INICJALIZACJA PLANSZY
     char plansza[WYS][SZER];
@@ -70,7 +70,6 @@ int main()
                     if (opcja == 2 || opcja == 1)   // RESTART (z menu lub z pauzy)
                     {
                         system("cls");
-                        HideCursor();
                         Inicjalizuj(plansza);
                         Cien = Obecny = Losuj(plansza, tab);
                         while(!Spadek(plansza, &Cien, 1));
@@ -131,7 +130,6 @@ int main()
                                 Menu();
                             // RESTART (opcja == 0)
                             system("cls");
-                            HideCursor();
                             Inicjalizuj(plansza);
                             Cien = Obecny = Losuj(plansza, tab);
                             while(!Spadek(plansza, &Cien, 1));
@@ -169,7 +167,6 @@ int main()
                             Menu();
                         // RESTART (opcja == 0)
                         system("cls");
-                        HideCursor();
                         Inicjalizuj(plansza);
                         Cien = Obecny = Losuj(plansza, tab);
                         while(!Spadek(plansza, &Cien, 1));
@@ -204,7 +201,6 @@ int main()
                     Menu();
                 // RESTART (opcja == 0)
                 system("cls");
-                HideCursor();
                 Inicjalizuj(plansza);
                 Cien = Obecny = Losuj(plansza, tab);
                 while(!Spadek(plansza, &Cien, 1));

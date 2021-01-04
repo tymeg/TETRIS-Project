@@ -29,6 +29,7 @@ void UsunWiersz (char plansza[WYS][SZER], int wiersz);
 bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik, double predkosc);
 
 int KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik, double predkosc);
+void Scoreboard(int wynik);
 
 
 #endif // FUNCTIONS_H_INCLUDED

@@ -75,11 +75,35 @@ void Menu()
             {
 
             }
+            */
             else if (znak == '4') // SCOREBOARD
             {
+                system("cls");
+                printf("\n [ESC] BACK\n\n\n");
+                FILE *fp;
+                fp = fopen("score.txt", "r");
 
+                if (fp == NULL)
+                    printf(" 1.");
+                else
+                {
+                    int n, score;
+                    fscanf(fp, "%d\n", &n);
+                    for (int i=0; i<n; i++)
+                    {
+                        fscanf(fp, "%d\n", &score);
+                        printf("%2d: %d\n", i+1, score);
+                    }
+                    fclose(fp);
+                }
+
+                while(1)
+                {
+                    znak = getch();
+                    if (znak == 27) // ESC
+                        goto menu;
+                }
             }
-            */
             else if (znak == '5') // EXIT
                 exit(0);
         }
@@ -421,6 +445,67 @@ bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik, double pre
     return usunieto;
 }
 
+void Scoreboard (int wynik)
+{
+    FILE *fp;
+    fp = fopen("score.txt", "r");
+
+    int n;
+    if (fp == NULL) // brak wynikow (score.txt nie istnieje)
+    {
+        fclose(fp);
+        fp = fopen("score.txt", "w");
+        fprintf(fp, "1\n%d", wynik);
+        fclose(fp);
+        n = 1;
+        printf("SCOREBOARD\n\n");
+        printf(" 1. %d", wynik);
+        return;
+    }
+    else
+    {
+        fscanf(fp, "%d\n", &n);   // wczytanie liczby wynikow (max 10)
+
+        int pom;
+        int scores[10];
+
+        for (int i=0; i<n; i++)
+        {
+            fscanf(fp, "%d\n", &pom);
+            scores[i] = pom;
+        }
+        fclose(fp);
+
+        if (n<10)
+        {
+            n++;
+            scores[n-1] = -1;
+        }
+
+        for (int i=0; i<n; i++)
+        {
+            if (wynik > scores[i])
+            {
+                pom = wynik;
+                wynik = scores[i];
+                scores[i] = pom;
+            }
+        }
+
+        fp = fopen("score.txt", "w");
+        fprintf(fp, "%d\n", n);
+        printf("SCOREBOARD\n\n");
+
+        for (int i=0; i<n; i++)
+        {
+            fprintf(fp, "%d\n", scores[i]);
+            printf("%2d. %d\n", i+1, scores[i]);
+        }
+        fclose(fp);
+    }
+
+}
+
 int KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik, double predkosc)
 {
     ClearScreen();
@@ -430,7 +515,10 @@ int KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik, double predkosc
     ClearScreen();
     Rysuj(plansza, wynik, predkosc);
     Sleep(1000);
-    printf("\rGAME OVER  \n\n[R]   RESTART\n[M]   MENU\n[ESC] EXIT");
+    system("cls");
+    printf("\nGAME OVER!\n\n\n");
+    Scoreboard(wynik);
+    printf("\n\n[R]   RESTART\n[M]   MENU\n[ESC] EXIT");
 
     int znak;
     while (1)

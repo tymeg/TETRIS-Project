@@ -1,9 +1,5 @@
-menu
-how to play
 klocki zwykłe/kolorowe
-scoreboard (z użyciem pliku txt)
-ładny efekt znikania pełnych wierszy
-
+możliwość zmiany startowej prędkości (1-5)
 
 Naliczanie punktów:
 +10 - jeden wiersz (1*1*10)
