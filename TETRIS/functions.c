@@ -50,6 +50,7 @@ void Menu()
 
         while(1)
         {
+            HideCursor();
             znak = getch();
             if (znak == '1')    // START
                 return;
@@ -191,6 +192,7 @@ int Pauza()
     printf("\rPAUSE      \n[ESC] RESUME\n[R]   RESTART\n[M]   MENU\n[X]   EXIT\n");
     while (1)
     {
+        HideCursor();
         znak = getch();
         if (znak == 27) // ESC - resume
             return 0;

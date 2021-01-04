@@ -45,6 +45,7 @@ int main()
     clock_t start;
     while (1)
     {
+        HideCursor();
         UstawPredkosc(&predkosc, wynik);
         Rysuj(plansza, wynik, predkosc);
         start = clock();
