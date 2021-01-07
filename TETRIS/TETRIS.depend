@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1609723240 source:c:\users\user\desktop\informatyka uwr\c\tetris-project\tetris\main.c
+1609788949 source:c:\users\user\desktop\informatyka uwr\c\tetris-project\tetris\main.c
 	<stdio.h>
 	<stdlib.h>
 	<time.h>

@@ -449,6 +449,7 @@ bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik, double pre
 
 void Scoreboard (int wynik)
 {
+    bool high_score = false;
     FILE *fp;
     fp = fopen("score.txt", "r");
 
@@ -484,6 +485,9 @@ void Scoreboard (int wynik)
             scores[n-1] = -1;
         }
 
+        if (wynik > scores[0])
+            high_score = true;
+
         for (int i=0; i<n; i++)
         {
             if (wynik > scores[i])
@@ -497,6 +501,9 @@ void Scoreboard (int wynik)
         fp = fopen("score.txt", "w");
         fprintf(fp, "%d\n", n);
         printf("SCOREBOARD\n\n");
+
+        if (high_score)
+           fprintf(fp, "NEW HIGH SCORE!!! %d\n\n", wynik);
 
         for (int i=0; i<n; i++)
         {
