@@ -1,8 +1,2 @@
 klocki zwykłe/kolorowe
 możliwość zmiany startowej prędkości (1-5)
-
-Naliczanie punktów:
-+10 - jeden wiersz (1*1*10)
-+40 - dwa wiersze (2*2*10)
-+90 - trzy wiersze (3*3*10)
-+160 - cztery wiersze - TETRIS (4*4*10)
