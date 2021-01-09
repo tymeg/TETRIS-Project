@@ -9,10 +9,10 @@
 
 void ClearScreen()
 {
-COORD cursorPosition;
-cursorPosition.X = 0;
-cursorPosition.Y = 0;
-SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
+    COORD cursorPosition;
+    cursorPosition.X = 0;
+    cursorPosition.Y = 0;
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), cursorPosition);
 }
 
 void HideCursor()
@@ -44,9 +44,8 @@ void Menu()
         printf("                 TYMEG\n\n");
         printf("     [1] START\n");
         printf("     [2] HOW TO PLAY\n");
-        printf("     [3] OPTIONS\n");
-        printf("     [4] SCOREBOARD\n");
-        printf("     [5] EXIT\n");
+        printf("     [3] SCOREBOARD\n");
+        printf("     [4] EXIT\n");
 
         while(1)
         {
@@ -71,13 +70,7 @@ void Menu()
                         goto menu;
                 }
             }
-            /*
-            else if (znak == '3') // OPTIONS
-            {
-
-            }
-            */
-            else if (znak == '4') // SCOREBOARD
+            else if (znak == '3') // SCOREBOARD
             {
                 system("cls");
                 printf("\n [ESC] BACK\n\n\n");
@@ -105,7 +98,7 @@ void Menu()
                         goto menu;
                 }
             }
-            else if (znak == '5') // EXIT
+            else if (znak == '4') // EXIT
                 exit(0);
         }
         menu:;
