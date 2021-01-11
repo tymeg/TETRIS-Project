@@ -462,7 +462,7 @@ void Scoreboard (int wynik)
     {
         fscanf(fp, "%d\n", &n);   // wczytanie liczby wynikow (max 10)
 
-        int pom;
+        int pom, wyn_pom;
         int scores[10];
 
         for (int i=0; i<n; i++)
@@ -479,7 +479,10 @@ void Scoreboard (int wynik)
         }
 
         if (wynik > scores[0])
+        {
+            wyn_pom = wynik;
             high_score = true;
+        }
 
         for (int i=0; i<n; i++)
         {
@@ -491,12 +494,12 @@ void Scoreboard (int wynik)
             }
         }
 
+        if (high_score)
+           printf("NEW HIGH SCORE!!! %d\n\n\n", wyn_pom);
+
         fp = fopen("score.txt", "w");
         fprintf(fp, "%d\n", n);
         printf("SCOREBOARD\n\n");
-
-        if (high_score)
-           fprintf(fp, "NEW HIGH SCORE!!! %d\n\n", wynik);
 
         for (int i=0; i<n; i++)
         {
