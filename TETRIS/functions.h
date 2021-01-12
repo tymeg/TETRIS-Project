@@ -14,7 +14,7 @@ void Rysuj(char plansza[WYS][SZER], int wynik, double predkosc);
 
 int Pauza();
 
-Klocek Losuj(char plansza[WYS][SZER], Klocek tab[7]);
+Klocek Losuj(Klocek tab[7]);
 bool WstawKlocek(char plansza[WYS][SZER], Klocek Obecny, Klocek Cien);
 
 bool Spadek(char plansza[WYS][SZER], Klocek *Obecny, bool czy_cien);

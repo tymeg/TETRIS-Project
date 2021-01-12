@@ -31,11 +31,11 @@ int main()
     Klocek tab[7] = {I, T, Kw, L, J, S, Z};
 
     srand(time(NULL));
-    Klocek Obecny = Losuj(plansza, tab);
+    Klocek Obecny = Losuj(tab);
     Klocek Cien = Obecny;
     while(!Spadek(plansza, &Cien, 1));
     WstawKlocek(plansza, Obecny, Cien);
-    Klocek Nastepny = Losuj(plansza, tab);
+    Klocek Nastepny = Losuj(tab);
 
     WstawNastepny(plansza, Obecny, Nastepny);
 
@@ -72,10 +72,10 @@ int main()
                     {
                         system("cls");
                         Inicjalizuj(plansza);
-                        Cien = Obecny = Losuj(plansza, tab);
+                        Cien = Obecny = Losuj(tab);
                         while(!Spadek(plansza, &Cien, 1));
                         WstawKlocek(plansza, Obecny, Cien);
-                        Nastepny = Losuj(plansza, tab);
+                        Nastepny = Losuj(tab);
                         WstawNastepny(plansza, Obecny, Nastepny);
                         wynik = 0;
                         predkosc = 1;
@@ -132,7 +132,7 @@ int main()
                             // RESTART (opcja == 0)
                             system("cls");
                             Inicjalizuj(plansza);
-                            Cien = Obecny = Losuj(plansza, tab);
+                            Cien = Obecny = Losuj(tab);
                             while(!Spadek(plansza, &Cien, 1));
                             WstawKlocek(plansza, Obecny, Cien);
                             wynik = 0;
@@ -140,7 +140,7 @@ int main()
                             Rysuj(plansza, wynik, predkosc);
                             start = clock();
                         }
-                        Nastepny = Losuj(plansza, tab);
+                        Nastepny = Losuj(tab);
                         WstawNastepny(plansza, Obecny, Nastepny);
                     }
                     else
@@ -169,7 +169,7 @@ int main()
                         // RESTART (opcja == 0)
                         system("cls");
                         Inicjalizuj(plansza);
-                        Cien = Obecny = Losuj(plansza, tab);
+                        Cien = Obecny = Losuj(tab);
                         while(!Spadek(plansza, &Cien, 1));
                         WstawKlocek(plansza, Obecny, Cien);
                         wynik = 0;
@@ -177,7 +177,7 @@ int main()
                         Rysuj(plansza, wynik, predkosc);
                         start = clock();
                     }
-                    Nastepny = Losuj(plansza, tab);
+                    Nastepny = Losuj(tab);
                     WstawNastepny(plansza, Obecny, Nastepny);
                     ClearScreen();
                     Rysuj(plansza, wynik, predkosc);
@@ -203,7 +203,7 @@ int main()
                 // RESTART (opcja == 0)
                 system("cls");
                 Inicjalizuj(plansza);
-                Cien = Obecny = Losuj(plansza, tab);
+                Cien = Obecny = Losuj(tab);
                 while(!Spadek(plansza, &Cien, 1));
                 WstawKlocek(plansza, Obecny, Cien);
                 wynik = 0;
@@ -211,7 +211,7 @@ int main()
                 Rysuj(plansza, wynik, predkosc);
                 start = clock();
             }
-            Nastepny = Losuj(plansza, tab);
+            Nastepny = Losuj(tab);
             WstawNastepny(plansza, Obecny, Nastepny);
         }
         else

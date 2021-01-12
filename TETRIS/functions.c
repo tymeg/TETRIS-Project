@@ -198,7 +198,7 @@ int Pauza()
     }
 }
 
-Klocek Losuj(char plansza[WYS][SZER], Klocek tab[7])
+Klocek Losuj(Klocek tab[7])
 {
     int los = rand() % 7;
     return tab[los];
