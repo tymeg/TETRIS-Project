@@ -1,1 +1,0 @@
-gcc -std=c11 -Wall -Wextra -Werror main.c game_state.c show.c -o TETRIS
