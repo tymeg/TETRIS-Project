@@ -5,7 +5,8 @@
 #include <windows.h>
 #include <stdbool.h>
 
-#include "functions.h"
+#include "game_state.h"
+#include "show.h"
 #include "blocks.h"
 
 int main()

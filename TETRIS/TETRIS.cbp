@@ -32,13 +32,17 @@
 			<Add option="-Wall" />
 		</Compiler>
 		<Unit filename="blocks.h" />
-		<Unit filename="functions.c">
+		<Unit filename="game_state.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="functions.h" />
+		<Unit filename="game_state.h" />
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="show.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="show.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>
