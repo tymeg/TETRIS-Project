@@ -12,11 +12,11 @@ bool WstawKlocek(char plansza[WYS][SZER], Klocek Obecny, Klocek Cien);
 
 bool Spadek(char plansza[WYS][SZER], Klocek *Obecny, bool czy_cien);
 
-void Lewo(char plansza[WYS][SZER], Klocek *Obecny, Klocek *Cien);
-void Prawo(char plansza[WYS][SZER], Klocek *Obecny, Klocek *Cien);
+bool Lewo(char plansza[WYS][SZER], Klocek *Obecny, Klocek *Cien);
+bool Prawo(char plansza[WYS][SZER], Klocek *Obecny, Klocek *Cien);
 
 void ObrotPunktuWzglSrodka (Pkt *p, Pkt sr);
-void Obrot(char plansza[WYS][SZER], Klocek *Obecny, Klocek *Cien);
+bool Obrot(char plansza[WYS][SZER], Klocek *Obecny, Klocek *Cien);
 
 void UsunWiersz (char plansza[WYS][SZER], int wiersz);
 bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik, double predkosc);

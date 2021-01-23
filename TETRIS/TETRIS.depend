@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1611402059 source:c:\users\user\desktop\informatyka uwr\c\tetris-project\tetris\main.c
+1611414205 source:c:\users\user\desktop\informatyka uwr\c\tetris-project\tetris\main.c
 	<stdio.h>
 	<stdlib.h>
 	<time.h>
@@ -26,7 +26,7 @@
 	<windows.h>
 	"blocks.h"
 
-1610203910 c:\users\user\desktop\informatyka uwr\c\tetris-project\tetris\blocks.h
+1611408433 c:\users\user\desktop\informatyka uwr\c\tetris-project\tetris\blocks.h
 
 1610203921 c:\users\user\desktop\informatyka uwr\c\tetris-project\tetris\functions.h
 	"blocks.h"
@@ -44,7 +44,7 @@
 1611403112 c:\users\user\desktop\informatyka uwr\c\tetris-project\tetris\show.h
 	"blocks.h"
 
-1611402042 source:c:\users\user\desktop\informatyka uwr\c\tetris-project\tetris\show.c
+1611412083 source:c:\users\user\desktop\informatyka uwr\c\tetris-project\tetris\show.c
 	<stdio.h>
 	<stdlib.h>
 	<stdbool.h>
@@ -53,6 +53,6 @@
 	<windows.h>
 	"blocks.h"
 
-1611403112 c:\users\user\desktop\informatyka uwr\c\tetris-project\tetris\game_state.h
+1611414205 c:\users\user\desktop\informatyka uwr\c\tetris-project\tetris\game_state.h
 	"blocks.h"
 

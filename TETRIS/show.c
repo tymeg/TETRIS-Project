@@ -7,6 +7,8 @@
 
 #include "blocks.h"
 
+// CZYSCZENIE EKRANU, PRZENOSZENIE KURSORA NA POCZATEK, CHOWANIE KURSORA (korzystaja z windows.h)
+
 void ClearScreen()
 {
     COORD cursorPosition;
@@ -28,10 +30,12 @@ void HideCursor()
     SetConsoleCursorInfo(hOut, &ConCurInf);
 }
 
+// WYSWIETLANIE STANOW MENU I PAUZY
+
 void Menu()
 {
     int znak;
-    while(1)
+    while(1)    // wyswietlanie menu
     {
         system("cls");
         printf("\n");
@@ -47,7 +51,7 @@ void Menu()
         printf("     [3] SCOREBOARD\n");
         printf("     [4] EXIT\n");
 
-        while(1)
+        while(1)    // oczekiwanie na wejscie z klawiatury uzytkownika
         {
             HideCursor();
             znak = getch();
@@ -63,14 +67,14 @@ void Menu()
                 printf("     D   - Right\n");
                 printf("   ENTER - Drop\n");
 
-                while(1)
+                while(1)    // powrot do menu
                 {
                     znak = getch();
                     if (znak == 27) // ESC
                         goto menu;
                 }
             }
-            else if (znak == '3') // SCOREBOARD
+            else if (znak == '3') // SCOREBOARD - wczytanie z pliku score.txt i wyswietlenie
             {
                 system("cls");
                 printf("\n [ESC] BACK\n\n\n");
@@ -91,7 +95,7 @@ void Menu()
                     fclose(fp);
                 }
 
-                while(1)
+                while(1)    // powrot do menu
                 {
                     znak = getch();
                     if (znak == 27) // ESC
@@ -106,11 +110,12 @@ void Menu()
 
 }
 
+// zwraca 0, 1, 2 lub 3
 int Pauza()
 {
     int znak;
     printf("\rPAUSE      \n[ESC] RESUME\n[R]   RESTART\n[M]   MENU\n[X]   EXIT\n");
-    while (1)
+    while (1) // oczekiwanie na wejscie z klawiatury uzytkownika
     {
         HideCursor();
         znak = getch();
@@ -125,6 +130,8 @@ int Pauza()
     }
 }
 
+// WYSWIETLANIE PLANSZY W KONSOLI
+
 void Rysuj(char plansza[WYS][SZER], int wynik, double predkosc)
 {
     for (int i=0; i<WYS; i++)
@@ -134,6 +141,7 @@ void Rysuj(char plansza[WYS][SZER], int wynik, double predkosc)
         printf("\n");
     }
 
+    // wyswietlenie na ekranie wyniku i obecnego poziomu predkosci (1-5)
     if (predkosc == 0.75)
         predkosc = 2;
     else if (predkosc == 0.5)
