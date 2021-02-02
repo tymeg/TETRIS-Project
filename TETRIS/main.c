@@ -32,28 +32,22 @@ int main()
 
     // INICJALIZACJA PLANSZY
     char plansza[WYS][SZER];
-    Inicjalizuj(plansza);
 
     srand(time(NULL));
-
-    int wynik;
-    int znak;
+    Klocek Obecny, Cien, Nastepny;
+    int wynik, znak;
     char* opcja;
     double predkosc; // zmienna ta oznacza czestotliwosc samoczynnego spadania klocka w sekundach
     clock_t start;
 
-    Klocek Obecny = Losuj(tab); // wylosowanie Klocka Obecny
-    Klocek Cien = Obecny; // podstawienie Obecny pod Cien
-    while(!Spadek(plansza, &Cien, 1));  // przesuwanie Cienia w dol tak dlugo, jak to mozliwe
-    WstawKlocek(plansza, Obecny, Cien); // wstawienie obu Klockow
-    Klocek Nastepny = Losuj(tab);   // wylosowanie Klocka Nastepny
-    WstawNastepny(plansza, Obecny, Nastepny);   // wstawienie go w prawy gorny rog planszy
+    NowaGra(plansza, tab, &wynik, &predkosc, &start, Obecny, Cien, Nastepny);
 
     // NIESKONCZONA PETLA - RDZEN ROZGRYWKI
     while (1)
     {
         HideCursor();
         UstawPredkosc(&predkosc, wynik);    // z kazdym automatycznym spadkiem o 1 ustawiaj odpowiednia predkosc w zaleznosci od wyniku
+        ReturnCursor();
         Rysuj(plansza, wynik, predkosc);    // wyswietlenie planszy
         start = clock();    // rozpoczecie liczenia czasu
         while( ( ((double)(clock() - start))/CLOCKS_PER_SEC ) < predkosc )  // oczekiwanie na wejscie z klawiatury uzytkownika przez czas rowny predkosc
@@ -74,23 +68,8 @@ int main()
                     }
                     else if (!strcmp(opcja, "MENU"))
                         Menu();
-                    /* RESTART z menu lub pauzy - inicjalizacja planszy, wylosowanie i wstawienie Klockow Obecny, Cien,
-                                                wyzerowanie wyniku i zegaru, ustawienie startowej predkosci */
-                    if (!strcmp(opcja, "RESTART") || !strcmp(opcja, "MENU"))
-                    {
-                        ClearScreen();
-                        Inicjalizuj(plansza);
-                        Cien = Obecny = Losuj(tab);
-                        while(!Spadek(plansza, &Cien, 1));
-                        WstawKlocek(plansza, Obecny, Cien);
-                        Nastepny = Losuj(tab);
-                        WstawNastepny(plansza, Obecny, Nastepny);
-                        wynik = 0;
-                        predkosc = 1;
-                        ReturnCursor();
-                        Rysuj(plansza, wynik, predkosc);
-                        start = clock();
-                    }
+                    if (!strcmp(opcja, "RESTART") || !strcmp(opcja, "MENU"))    // restart z menu lub pauzy
+                        NowaGra(plansza, tab, &wynik, &predkosc, &start, Obecny, Cien, Nastepny);
                 }
                 else if (znak == 'w')   // Obrot
                 {
@@ -144,20 +123,14 @@ int main()
                                 exit(0);
                             else if (!strcmp(opcja, "MENU"))
                                 Menu();
-                            /* RESTART - inicjalizacja planszy, wylosowanie i wstawienie Klockow Obecny, Cien,
-                                                    wyzerowanie wyniku i zegaru, ustawienie startowej predkosci */
-                            ClearScreen();
-                            Inicjalizuj(plansza);
-                            Cien = Obecny = Losuj(tab);
-                            while(!Spadek(plansza, &Cien, 1));
-                            WstawKlocek(plansza, Obecny, Cien);
-                            wynik = 0;
-                            predkosc = 1;
-                            Rysuj(plansza, wynik, predkosc);
-                            start = clock();
+                            else if (!strcmp(opcja, "RESTART"))
+                                NowaGra(plansza, tab, &wynik, &predkosc, &start, Obecny, Cien, Nastepny);
                         }
-                        Nastepny = Losuj(tab);  // losowanie Klocka Nastepny i wstawienie go w prawy gorny rog planszy
-                        WstawNastepny(plansza, Obecny, Nastepny);
+                        else    // w przeciwnym wypadku losuj nowy klocek
+                        {
+                            Nastepny = Losuj(tab);  // losowanie Klocka Nastepny i wstawienie go w prawy gorny rog planszy
+                            WstawNastepny(plansza, Obecny, Nastepny);
+                        }
                     }
                     else    // klocek nie spadl na sam dol, wtedy wstaw Klocki Obecny i Cien i odswiez plansze
                         WstawKlocek(plansza, Obecny, Cien);
@@ -182,20 +155,14 @@ int main()
                             exit(0);
                         else if (!strcmp(opcja, "MENU"))
                             Menu();
-                        /* RESTART - inicjalizacja planszy, wylosowanie i wstawienie Klockow Obecny, Cien,
-                                                    wyzerowanie wyniku i zegaru, ustawienie startowej predkosci */
-                        ClearScreen();
-                        Inicjalizuj(plansza);
-                        Cien = Obecny = Losuj(tab);
-                        while(!Spadek(plansza, &Cien, 1));
-                        WstawKlocek(plansza, Obecny, Cien);
-                        wynik = 0;
-                        predkosc = 1;
-                        Rysuj(plansza, wynik, predkosc);
-                        start = clock();
+                        else if (!strcmp(opcja, "RESTART"))
+                            NowaGra(plansza, tab, &wynik, &predkosc, &start, Obecny, Cien, Nastepny);
                     }
-                    Nastepny = Losuj(tab);
-                    WstawNastepny(plansza, Obecny, Nastepny);
+                    else    // w przeciwnym wypadku losuj nowy klocek
+                    {
+                        Nastepny = Losuj(tab);
+                        WstawNastepny(plansza, Obecny, Nastepny);
+                    }
                     ReturnCursor();
                     Rysuj(plansza, wynik, predkosc);
                 }
@@ -218,25 +185,18 @@ int main()
                     exit(0);
                 else if (!strcmp(opcja, "MENU"))
                     Menu();
-                /* RESTART - inicjalizacja planszy, wylosowanie i wstawienie Klockow Obecny, Cien,
-                                                wyzerowanie wyniku i zegaru, ustawienie startowej predkosci */
-                ClearScreen();
-                Inicjalizuj(plansza);
-                Cien = Obecny = Losuj(tab);
-                while(!Spadek(plansza, &Cien, 1));
-                WstawKlocek(plansza, Obecny, Cien);
-                wynik = 0;
-                predkosc = 1;
-                Rysuj(plansza, wynik, predkosc);
-                start = clock();
+                else if (!strcmp(opcja, "RESTART"))
+                    NowaGra(plansza, tab, &wynik, &predkosc, &start, Obecny, Cien, Nastepny);
             }
-            Nastepny = Losuj(tab);  // losowanie Klocka Nastepny
-            WstawNastepny(plansza, Obecny, Nastepny);   // wstawienie klockow
+            else
+            {
+                Nastepny = Losuj(tab);  // losowanie Klocka Nastepny
+                WstawNastepny(plansza, Obecny, Nastepny);   // wstawienie klockow
+            }
         }
         else    // klocek nie spadl na sam dol, wtedy wstaw klocki Obecny i Cien (ich wyswietlenie nastapi na poczatku kolejnego obrotu glownej petli)
             WstawKlocek(plansza, Obecny, Cien);
         ReturnCursor();
-
     }
 
 }

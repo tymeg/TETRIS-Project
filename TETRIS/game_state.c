@@ -69,7 +69,8 @@ void UstawPredkosc(double *predkosc, int wynik)
 Klocek Losuj(const Klocek tab[TYPY])
 {
     int los = rand() % TYPY;
-    return tab[los];
+    Klocek Wylosowany = tab[los];
+    return Wylosowany;
 }
 
 // wstawienie Klockow Obecny i Cien do planszy, zwrocenie false, jezeli wstawienie jest niemozliwe
@@ -301,6 +302,23 @@ bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik, double pre
     *wynik += licz*licz*10; // dodawanie do wyniku kwoty (liczba usunietych wierszy)^2 * 10
     return usunieto;
 }
+
+void NowaGra(char plansza[WYS][SZER], const Klocek tab[TYPY], int *wynik, double *predkosc, clock_t *start, Klocek Obecny, Klocek Cien, Klocek Nastepny)
+{
+    ClearScreen();
+    Inicjalizuj(plansza);
+    Cien = Obecny = Losuj(tab); // wylosowanie Klocka Obecny
+    while(!Spadek(plansza, &Cien, 1));  // przesuwanie Cienia w dol tak dlugo, jak to mozliwe
+    WstawKlocek(plansza, Obecny, Cien); // wstawienie obu Klockow
+    *wynik = 0;
+    *predkosc = 1;
+    Nastepny = Losuj(tab);   // wylosowanie Klocka Nastepny
+    WstawNastepny(plansza, Obecny, Nastepny);   // wstawienie go w prawy gorny rog planszy
+    ReturnCursor();
+    Rysuj(plansza, *wynik, *predkosc);
+    *start = clock();
+}
+
 
 // funkcja uruchamiana przy koncu gry - wczytywanie obecnego scoreboardu, dopisywanie nowego wyniku i wyswietlanie scoreboarda
 void Scoreboard (int wynik)

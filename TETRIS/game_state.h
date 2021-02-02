@@ -21,6 +21,7 @@ bool Obrot(char plansza[WYS][SZER], Klocek *Obecny, Klocek *Cien);
 void UsunWiersz (char plansza[WYS][SZER], int wiersz);
 bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik, double predkosc);
 
+void NowaGra(char plansza[WYS][SZER], const Klocek tab[TYPY], int *wynik, double *predkosc, clock_t *start, Klocek Obecny, Klocek Cien, Klocek Nastepny);
 void Scoreboard(int wynik);
 char* KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik, double predkosc);
 
