@@ -4,12 +4,18 @@
 #include <time.h>
 #include <conio.h>
 #include <windows.h>
+#include <string.h>
 
 #include "blocks.h"
 
 // CZYSCZENIE EKRANU, PRZENOSZENIE KURSORA NA POCZATEK, CHOWANIE KURSORA (korzystaja z windows.h)
 
 void ClearScreen()
+{
+    system("cls");
+}
+
+void ReturnCursor()
 {
     COORD cursorPosition;
     cursorPosition.X = 0;
@@ -30,6 +36,18 @@ void HideCursor()
     SetConsoleCursorInfo(hOut, &ConCurInf);
 }
 
+// USYPIANIE EKRANU - korzystaja z windows.h
+
+void Sleep1Sec()
+{
+    Sleep(1000);
+}
+
+void Sleep0_2Sec()
+{
+    Sleep(200);
+}
+
 // WYSWIETLANIE STANOW MENU I PAUZY
 
 void Menu()
@@ -37,7 +55,7 @@ void Menu()
     int znak;
     while(1)    // wyswietlanie menu
     {
-        system("cls");
+        ClearScreen();
         printf("\n");
         printf(" ### ### ### ##  # ###\n");
         printf("  #  #    #  # # # #  \n");
@@ -59,7 +77,7 @@ void Menu()
                 return;
             else if (znak == '2') // HOW TO PLAY
             {
-                system("cls");
+                ClearScreen();
                 printf("\n [ESC] BACK\n\n\n");
                 printf("     W   - Rotate\n");
                 printf("     S   - Down\n");
@@ -70,16 +88,16 @@ void Menu()
                 while(1)    // powrot do menu
                 {
                     znak = getch();
-                    if (znak == 27) // ESC
+                    if (znak == ESC)
                         goto menu;
                 }
             }
-            else if (znak == '3') // SCOREBOARD - wczytanie z pliku score.txt i wyswietlenie
+            else if (znak == '3') // SCOREBOARD - wczytanie z pliku i wyswietlenie
             {
-                system("cls");
+                ClearScreen();
                 printf("\n [ESC] BACK\n\n\n");
                 FILE *fp;
-                fp = fopen("score.txt", "r");
+                fp = fopen(SCORE, "r");
 
                 if (fp == NULL)
                     printf(" 1.");
@@ -98,7 +116,7 @@ void Menu()
                 while(1)    // powrot do menu
                 {
                     znak = getch();
-                    if (znak == 27) // ESC
+                    if (znak == ESC)
                         goto menu;
                 }
             }
@@ -110,8 +128,8 @@ void Menu()
 
 }
 
-// zwraca 0, 1, 2 lub 3
-int Pauza()
+// zwraca "ESC", "RESTART", "MENU" lub "EXIT"
+char* Pauza()
 {
     int znak;
     printf("\rPAUSE      \n[ESC] RESUME\n[R]   RESTART\n[M]   MENU\n[X]   EXIT\n");
@@ -119,14 +137,14 @@ int Pauza()
     {
         HideCursor();
         znak = getch();
-        if (znak == 27) // ESC - resume
-            return 0;
-        else if (znak == 'r') // R - restart
-            return 1;
-        else if (znak == 'm') // M - menu
-            return 2;
-        else if (znak == 'x') // X - exit
-            return 3;
+        if (znak == ESC)
+            return "RESUME";
+        else if (znak == 'r')
+            return "RESTART";
+        else if (znak == 'm')
+            return "MENU";
+        else if (znak == 'x')
+            return "EXIT";
     }
 }
 

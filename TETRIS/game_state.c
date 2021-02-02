@@ -4,6 +4,7 @@
 #include <time.h>
 #include <conio.h>
 #include <windows.h>
+#include <string.h>
 
 #include "blocks.h"
 #include "show.h"
@@ -43,11 +44,11 @@ void WstawNastepny(char plansza[WYS][SZER], Klocek Obecny, Klocek Nastepny)
     plansza[4][14] = 'N', plansza[4][15] = 'E', plansza[4][16] = 'X', plansza[4][17] = 'T', plansza[4][18] = ':';
 
     // wyczyszczenie pol zajmowanych przez poprzedni klocek
-    for (int i=0; i<4; i++)
+    for (int i=0; i<KWADRATY; i++)
         plansza[Obecny.kwadraty[i].y+5][Obecny.kwadraty[i].x+10] = ' ';
 
     // wstawienie '+' na bazie pol kwadraty Klocka Nastepny
-    for (int i=0; i<4; i++)
+    for (int i=0; i<KWADRATY; i++)
         plansza[Nastepny.kwadraty[i].y+5][Nastepny.kwadraty[i].x+10] = '+';
 }
 
@@ -62,14 +63,12 @@ void UstawPredkosc(double *predkosc, int wynik)
         *predkosc = 0.2;
     else if (*predkosc == 0.2 && wynik >= 3000)
         *predkosc = 0.1;
-    else if (*predkosc == 0.1 && wynik >= 5000)
-        *predkosc = 0.05;
 }
 
 // losowanie klocka sposrod tablicy 7 mozliwych klockow i zwrocenie go
-Klocek Losuj(Klocek tab[7])
+Klocek Losuj(const Klocek tab[TYPY])
 {
-    int los = rand() % 7;
+    int los = rand() % TYPY;
     return tab[los];
 }
 
@@ -78,7 +77,7 @@ bool WstawKlocek(char plansza[WYS][SZER], Klocek Obecny, Klocek Cien)
 {
     bool pom = true;
 
-    for (int i=0; i<4; i++)
+    for (int i=0; i<KWADRATY; i++)
     {
         // wstawienie '-' jako Klocka Cien, jezeli pole nie jest zajete
         if (plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] != '#')
@@ -86,7 +85,7 @@ bool WstawKlocek(char plansza[WYS][SZER], Klocek Obecny, Klocek Cien)
         else    // jesli ktorekolwiek pole jest zajete, to nie mozna wstawic
             pom = false;
     }
-    for (int i=0; i<4; i++)
+    for (int i=0; i<KWADRATY; i++)
     {
         // wstawianie '+' nadpisuje ewentualne '-'
         if (plansza[Obecny.kwadraty[i].y][Obecny.kwadraty[i].x] != '#')
@@ -101,7 +100,7 @@ bool Spadek(char plansza[WYS][SZER], Klocek *Obecny, bool czy_cien)
     bool czy_mozna = true;
 
     // jesli ktores z pol ponizej zajete, to nie mozna wykonac spadku
-    for (int i=0; i<4; i++)
+    for (int i=0; i<KWADRATY; i++)
         if (plansza[Obecny->kwadraty[i].y+1][Obecny->kwadraty[i].x] == '#' || plansza[Obecny->kwadraty[i].y+1][Obecny->kwadraty[i].x] == 'O')
         {
             czy_mozna = false;
@@ -110,7 +109,7 @@ bool Spadek(char plansza[WYS][SZER], Klocek *Obecny, bool czy_cien)
 
     if (czy_mozna)
     {
-        for (int i=0; i<4; i++) // wyczyszczenie pol dotychczas zajetych, przesuniecie kwadratow o 1 w dol
+        for (int i=0; i<KWADRATY; i++) // wyczyszczenie pol dotychczas zajetych, przesuniecie kwadratow o 1 w dol
         {
             plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = ' ';
             (Obecny->kwadraty[i].y)++;
@@ -130,7 +129,7 @@ bool Spadek(char plansza[WYS][SZER], Klocek *Obecny, bool czy_cien)
     else
     {
         if (!czy_cien)  // jesli podany do funkcji Klocek nie jest Cieniem, to w przypadku spadku na sam dol wstaw '#'
-            for (int i=0; i<4; i++)
+            for (int i=0; i<KWADRATY; i++)
                 plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = '#';
 
         return true;    // zwraca true, gdy Klocek spadl na sam dol
@@ -142,11 +141,11 @@ bool Spadek(char plansza[WYS][SZER], Klocek *Obecny, bool czy_cien)
 bool Lewo(char plansza[WYS][SZER], Klocek *Obecny, Klocek *Cien)
 {
     // dla kazdego kwadratu Klocka sprawdzanie, czy pole na lewo nie jest zajete przez '#' lub 'O' (moze byc zajete przez '+')
-    for (int i=0; i<4; i++)
+    for (int i=0; i<KWADRATY; i++)
         if (plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x-1] == '#' || plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x-1] == 'O')
             return false;   // nie mozna wykonac ruchu w lewo
 
-    for (int i=0; i<4; i++) // wyczyszczenie pol zajetych obecnie przez Klocki Obecny, Cien, przesuniecie kwadratow o 1 w lewo
+    for (int i=0; i<KWADRATY; i++) // wyczyszczenie pol zajetych obecnie przez Klocki Obecny, Cien, przesuniecie kwadratow o 1 w lewo
     {
         plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = ' ';
         plansza[Cien->kwadraty[i].y][Cien->kwadraty[i].x] = ' ';
@@ -169,11 +168,11 @@ bool Lewo(char plansza[WYS][SZER], Klocek *Obecny, Klocek *Cien)
 bool Prawo(char plansza[WYS][SZER], Klocek *Obecny, Klocek *Cien)
 {
     // dla kazdego kwadratu Klocka sprawdza, czy pole na prawo nie jest zajete przez '#' lub 'O' (moze byc zajete przez '+')
-    for (int i=0; i<4; i++)
+    for (int i=0; i<KWADRATY; i++)
         if (plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x+1] == '#' || plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x+1] == 'O')
             return false;   // nie mozna wykonac ruchu w prawo
 
-    for (int i=0; i<4; i++) // wyczyszczenie pol zajetych obecnie przez Klocki Obecny, Cien, przesuniecie kwadratow o 1 w prawo
+    for (int i=0; i<KWADRATY; i++) // wyczyszczenie pol zajetych obecnie przez Klocki Obecny, Cien, przesuniecie kwadratow o 1 w prawo
     {
         plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = ' ';
         plansza[Cien->kwadraty[i].y][Cien->kwadraty[i].x] = ' ';
@@ -218,13 +217,13 @@ bool Obrot(char plansza[WYS][SZER], Klocek *Obecny, Klocek *Cien)
         if (plansza[Obecny->zakazane[i].y][Obecny->zakazane[i].x] == '#' || plansza[Obecny->zakazane[i].y][Obecny->zakazane[i].x] == 'O')
             return false;   // nie mozna wykonac obrotu
 
-    for (int i=0; i<4; i++) // wyczyszczenie pol zajetych obecnie przez Klocki Obecny, Cien
+    for (int i=0; i<KWADRATY; i++) // wyczyszczenie pol zajetych obecnie przez Klocki Obecny, Cien
     {
         plansza[Obecny->kwadraty[i].y][Obecny->kwadraty[i].x] = ' ';
         plansza[Cien->kwadraty[i].y][Cien->kwadraty[i].x] = ' ';
     }
 
-    for (int i=0; i<4; i++) // obrocenie kwadratow wzgledem srodka
+    for (int i=0; i<KWADRATY; i++) // obrocenie kwadratow wzgledem srodka
     {
         Pkt pom = {Obecny->kwadraty[i].y - Obecny->siatka[0][0].y, Obecny->kwadraty[i].x - Obecny->siatka[0][0].x};
         ObrotPunktuWzglSrodka(&pom, sr);
@@ -289,13 +288,13 @@ bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik, double pre
         {
             for (int j=2; j<12; j++)    // wstawienie 'x' w miejsce usuwanego wiersza
                 plansza[i][j] = 'x';
-            ClearScreen();
+            ReturnCursor();
             Rysuj(plansza, *wynik, predkosc);   // wyswietlenie 'xxxxxxxxxx' na 0.2 sekundy
-            Sleep(200);
+            Sleep0_2Sec();
             usunieto = true;
             UsunWiersz(plansza, i); // usuwanie wiersza, doliczenie usunietego wiersz do zmiennej licz, wyswietlenie planszy po usunieciu tego wiersza
             licz++;
-            ClearScreen();
+            ReturnCursor();
             Rysuj(plansza, *wynik, predkosc);
         }
     }
@@ -307,14 +306,14 @@ bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik, double pre
 void Scoreboard (int wynik)
 {
     bool high_score = false;
-    FILE *fp;   // wczytanie scoreboarda z pliku score.txt
-    fp = fopen("score.txt", "r");
+    FILE *fp;   // wczytanie scoreboarda z pliku
+    fp = fopen(SCORE, "r");
 
     int n;
-    if (fp == NULL) // brak wynikow (score.txt nie istnieje) - wyswietlenie tylko nowo uzyskanego wyniku, zapisanie go do score.txt
+    if (fp == NULL) // brak wynikow (plik ze scoreboardem nie istnieje) - wyswietlenie tylko nowo uzyskanego wyniku, zapisanie go do pliku
     {
         fclose(fp);
-        fp = fopen("score.txt", "w");
+        fp = fopen(SCORE, "w");
         fprintf(fp, "1\n%d", wynik);
         fclose(fp);
         n = 1;
@@ -334,7 +333,7 @@ void Scoreboard (int wynik)
             fscanf(fp, "%d\n", &pom);
             scores[i] = pom;
         }
-        fclose(fp); // zamkniecie pliku score.txt
+        fclose(fp); // zamkniecie pliku
 
 
         if (n<10)   // jesli scoreboard ma mniej niz 10 wynikow, zwieksz liczbe wynikow o 1 i wstaw -1 do ostatniego pola
@@ -362,14 +361,14 @@ void Scoreboard (int wynik)
         if (high_score)
            printf("NEW HIGH SCORE!!! %d\n\n\n", wyn_pom);
 
-        // otworzenie pliku.txt w celu wyswietlenia nowego scoreboarda i wpisania go do score.txt
-        fp = fopen("score.txt", "w");
+        // otworzenie pliku .txt w celu wyswietlenia nowego scoreboarda i wpisania go do pliku
+        fp = fopen(SCORE, "w");
         fprintf(fp, "%d\n", n);
         printf("SCOREBOARD\n\n");
 
         for (int i=0; i<n; i++)
         {
-            fprintf(fp, "%d\n", scores[i]); // wpisanie do score.txt
+            fprintf(fp, "%d\n", scores[i]); // wpisanie do pliku
             printf("%2d. %d\n", i+1, scores[i]); // wypisanie na ekran
         }
         fclose(fp);
@@ -377,19 +376,19 @@ void Scoreboard (int wynik)
 
 }
 
-// funkcja uruchamiana, gdy gra nie moze wstawic nowego klocka na gorze planszy
-int KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik, double predkosc)
+// funkcja uruchamiana, gdy gra nie moze wstawic calego nowego klocka na gorze planszy
+char* KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik, double predkosc)
 {
     // wstawienie jeszcze '+' tam gdzie jest wolne pole, wyswietlenie tego, a nastepnie zastapienie '#' i ponowne wyswietlenie
-    ClearScreen();
+    ReturnCursor();
     Rysuj(plansza, wynik, predkosc);
-    Sleep(1000);
+    Sleep1Sec();
     Spadek(plansza, &Obecny, 0);
-    ClearScreen();
+    ReturnCursor();
     Rysuj(plansza, wynik, predkosc);
-    Sleep(1000);
+    Sleep1Sec();
 
-    system("cls");
+    ClearScreen();
     printf("\nGAME OVER!\n\n\n");
     Scoreboard(wynik);  // wyswietlenie zaktualizowanego scoreboarda
     printf("\n\n[R]   RESTART\n[M]   MENU\n[ESC] EXIT");
@@ -400,12 +399,12 @@ int KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik, double predkosc
         if (kbhit())
         {
             znak = getch();
-            if (znak == 'r') // R - restart
-                return 0;
-            else if (znak == 'm') // M - menu
-                return 1;
-            else if (znak == 27) // ESC - exit
-                return 2;
+            if (znak == 'r')
+                return "RESTART";
+            else if (znak == 'm')
+                return "MENU";
+            else if (znak == ESC)
+                return "EXIT";
         }
     }
 }
