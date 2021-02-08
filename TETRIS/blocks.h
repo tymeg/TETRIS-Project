@@ -10,8 +10,10 @@
 
 #define SCORE "score.txt"   // plik do zapisywania scoreboardu
 
-#define ESC 27  // numery klawiszy na Windowsie
+#define ESC 27  // numery klawiszy na Windowsie (conio.h)
 #define ENTER 13
+
+#define AUTO 10 // specjalny nr znaku przekazywany przy automatycznym spadku klocka do funkcji Wykonaj
 
 // struktura Pkt
 typedef struct

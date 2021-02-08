@@ -2,9 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include <conio.h>
-#include <windows.h>
 #include <stdbool.h>
-#include <string.h>
 
 #include "game_state.h"
 #include "show.h"
@@ -26,21 +24,20 @@ const Klocek tab[TYPY] = {I, T, Kw, L, J, S, Z};
 
 int main()
 {
-    HideCursor();
-    Menu();
-    ClearScreen();
-
-    // INICJALIZACJA PLANSZY
+    // INICJALIZACJA PLANSZY I ZMIENNYCH
     char plansza[WYS][SZER];
 
     srand(time(NULL));
     Klocek Obecny, Cien, Nastepny;
     int wynik, znak;
-    char* opcja;
     double predkosc; // zmienna ta oznacza czestotliwosc samoczynnego spadania klocka w sekundach
     clock_t start;
 
-    NowaGra(plansza, tab, &wynik, &predkosc, &start, Obecny, Cien, Nastepny);
+    HideCursor();
+    Menu();
+    ClearScreen();
+
+    NowaGra(plansza, tab, &wynik, &predkosc, &start, &Obecny, &Cien, &Nastepny);
 
     // NIESKONCZONA PETLA - RDZEN ROZGRYWKI
     while (1)
@@ -54,149 +51,12 @@ int main()
         {
             if (kbhit())
             {
-                znak = getch();
-                if (znak == ESC)    // Pauza
-                {
-                    opcja = Pauza(); // w zaleznosci od wyniku Pauza wyjscie z gry, resume, wyjscie do menu lub restart
-                    if (!strcmp(opcja, "EXIT"))
-                        exit(0);
-                    else if (!strcmp(opcja, "RESUME"))
-                    {
-                        ClearScreen();
-                        HideCursor();
-                        Rysuj(plansza, wynik, predkosc);
-                    }
-                    else if (!strcmp(opcja, "MENU"))
-                        Menu();
-                    if (!strcmp(opcja, "RESTART") || !strcmp(opcja, "MENU"))    // restart z menu lub pauzy
-                        NowaGra(plansza, tab, &wynik, &predkosc, &start, Obecny, Cien, Nastepny);
-                }
-                else if (znak == 'w')   // Obrot
-                {
-                    if (Obrot(plansza, &Obecny, &Cien)) // obrocenie klocka Obecny (jesli to mozliwe - wtedy true)
-                    {
-                        Cien = Obecny;  // podstawienie Obecny pod Cien
-                        while(!Spadek(plansza, &Cien, 1));  // przesuwanie Cienia w dol tak dlugo, jak to mozliwe
-                        WstawKlocek(plansza, Obecny, Cien); // wstawienie klockow
-                        ReturnCursor();
-                        Rysuj(plansza, wynik, predkosc);    // wyswietlenie planszy
-                    }
-                }
-                else if (znak == 'a')   // Lewo
-                {
-                    if (Lewo(plansza, &Obecny, &Cien))  // przesuniecie klocka Obecny o 1 w lewo (jesli to mozliwe - wtedy true)
-                    {
-                        Cien = Obecny;  // podstawienie Obecny pod Cien
-                        while(!Spadek(plansza, &Cien, 1));  // przesuwanie Cienia w dol tak dlugo, jak to mozliwe
-                        WstawKlocek(plansza, Obecny, Cien); // wstawienie klockow
-                        ReturnCursor();
-                        Rysuj(plansza, wynik, predkosc);    // wyswietlenie planszy
-                    }
-                }
-                else if (znak == 'd')   // Prawo
-                {
-                    if (Prawo(plansza, &Obecny, &Cien)) // przesuniecie klocka Obecny o 1 w prawo (jesli to mozliwe - wtedy true)
-                    {
-                        Cien = Obecny;  // podstawienie Obecny pod Cien
-                        while(!Spadek(plansza, &Cien, 1));  // przesuwanie Cienia w dol tak dlugo, jak to mozliwe
-                        WstawKlocek(plansza, Obecny, Cien); // wstawienie klockow
-                        ReturnCursor();
-                        Rysuj(plansza, wynik, predkosc);    // wyswietlenie planszy
-                    }
-                }
-                else if (znak == 's')   // Dol
-                {
-                    if (Spadek(plansza, &Obecny, 0))    // wywolanie spadek, true jezeli klocek spadl na sam dol
-                    {
-                        if (SprawdzWiersze(plansza, Obecny.srodek.y - 2, &wynik, predkosc))    // sprawdzenie, czy sa pelne wiersze (od wiersza rownego srodek klocka, ktory spadl - 2)
-                        {
-                            start = clock();
-                            ReturnCursor();
-                            Rysuj(plansza, wynik, predkosc);
-                        }
-                        Cien = Obecny = Nastepny;   // Obecny i Cien staja sie Nastepnym
-                        while(!Spadek(plansza, &Cien, 1));
-                        if (!WstawKlocek(plansza, Obecny, Cien))    // jesli gra nie moze wstawic nowego klocka na gore planszy, to koniec gry
-                        {
-                            opcja = KoniecGry(plansza, Obecny, wynik, predkosc);
-                            if (!strcmp(opcja, "EXIT"))
-                                exit(0);
-                            else if (!strcmp(opcja, "MENU"))
-                                Menu();
-                            else if (!strcmp(opcja, "RESTART"))
-                                NowaGra(plansza, tab, &wynik, &predkosc, &start, Obecny, Cien, Nastepny);
-                        }
-                        else    // w przeciwnym wypadku losuj nowy klocek
-                        {
-                            Nastepny = Losuj(tab);  // losowanie Klocka Nastepny i wstawienie go w prawy gorny rog planszy
-                            WstawNastepny(plansza, Obecny, Nastepny);
-                        }
-                    }
-                    else    // klocek nie spadl na sam dol, wtedy wstaw Klocki Obecny i Cien i odswiez plansze
-                        WstawKlocek(plansza, Obecny, Cien);
-                    ReturnCursor();
-                    Rysuj(plansza, wynik, predkosc);
-                }
-                else if (znak == ENTER)   // Spadek na sam dol
-                {
-                    while (!Spadek(plansza, &Obecny, 0));   // przesuwanie klocka Obecny w dol tak dlugo, jak to mozliwe
-                    if (SprawdzWiersze(plansza, Obecny.srodek.y - 2, &wynik, predkosc)) // sprawdzenie, czy sa pelne wiersze (od wiersza rownego srodek klocka, ktory spadl - 2)
-                    {
-                        start = clock();
-                        ReturnCursor();
-                        Rysuj(plansza, wynik, predkosc);
-                    }
-                    Cien = Obecny = Nastepny;   // Obecny i Cien staja sie Nastepnym
-                    while(!Spadek(plansza, &Cien, 1));
-                    if (!WstawKlocek(plansza, Obecny, Cien))    // jesli gra nie moze wstawic nowego klocka na gore planszy, to koniec gry
-                    {
-                        opcja = KoniecGry(plansza, Obecny, wynik, predkosc);
-                        if (!strcmp(opcja, "EXIT"))
-                            exit(0);
-                        else if (!strcmp(opcja, "MENU"))
-                            Menu();
-                        else if (!strcmp(opcja, "RESTART"))
-                            NowaGra(plansza, tab, &wynik, &predkosc, &start, Obecny, Cien, Nastepny);
-                    }
-                    else    // w przeciwnym wypadku losuj nowy klocek
-                    {
-                        Nastepny = Losuj(tab);
-                        WstawNastepny(plansza, Obecny, Nastepny);
-                    }
-                    ReturnCursor();
-                    Rysuj(plansza, wynik, predkosc);
-                }
+                znak = getch(); // wprowadzony znak zostaje przekazany do funkcji Wykonaj
+                Wykonaj(znak, plansza, tab, &wynik, &predkosc, &start, &Obecny, &Cien, &Nastepny);
             }
         }
-        // KONIEC CZASU NA WCISKANIE KLAWISZY PRZEZ UZYTKOWNIKA - samoczynny spadek klocka
-        if (Spadek(plansza, &Obecny, 0))    // wywolanie spadek, true jezeli klocek spadl na sam dol
-        {
-            if (SprawdzWiersze(plansza, Obecny.srodek.y - 2, &wynik, predkosc)) // sprawdzenie, czy sa pelne wiersze (od wiersza rownego srodek klocka, ktory spadl - 2)
-            {
-                ReturnCursor();
-                Rysuj(plansza, wynik, predkosc);
-            }
-            Cien = Obecny = Nastepny;   // Obecny i Cien staja sie Nastepnym
-            while(!Spadek(plansza, &Cien, 1)); // przesuwanie Cienia w dol tak dlugo, jak to mozliwe
-            if (!WstawKlocek(plansza, Obecny, Cien))    // jesli gra nie moze wstawic nowego klocka na gore planszy, to koniec gry
-            {
-                opcja = KoniecGry(plansza, Obecny, wynik, predkosc);
-                if (!strcmp(opcja, "EXIT"))
-                    exit(0);
-                else if (!strcmp(opcja, "MENU"))
-                    Menu();
-                else if (!strcmp(opcja, "RESTART"))
-                    NowaGra(plansza, tab, &wynik, &predkosc, &start, Obecny, Cien, Nastepny);
-            }
-            else
-            {
-                Nastepny = Losuj(tab);  // losowanie Klocka Nastepny
-                WstawNastepny(plansza, Obecny, Nastepny);   // wstawienie klockow
-            }
-        }
-        else    // klocek nie spadl na sam dol, wtedy wstaw klocki Obecny i Cien (ich wyswietlenie nastapi na poczatku kolejnego obrotu glownej petli)
-            WstawKlocek(plansza, Obecny, Cien);
-        ReturnCursor();
+        // koniec czasu na wciskanie klawiszy przez uzytkownika - samoczynny spadek klocka
+        Wykonaj(AUTO, plansza, tab, &wynik, &predkosc, &start, &Obecny, &Cien, &Nastepny);
     }
 
 }

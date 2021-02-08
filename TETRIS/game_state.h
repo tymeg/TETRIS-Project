@@ -21,9 +21,15 @@ bool Obrot(char plansza[WYS][SZER], Klocek *Obecny, Klocek *Cien);
 void UsunWiersz (char plansza[WYS][SZER], int wiersz);
 bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik, double predkosc);
 
-void NowaGra(char plansza[WYS][SZER], const Klocek tab[TYPY], int *wynik, double *predkosc, clock_t *start, Klocek Obecny, Klocek Cien, Klocek Nastepny);
+void NowaGra(char plansza[WYS][SZER], const Klocek tab[TYPY], int *wynik, double *predkosc, clock_t *start, Klocek *Obecny, Klocek *Cien, Klocek *Nastepny);
+void WykonajPauze(char plansza[WYS][SZER], const Klocek tab[TYPY], int *wynik, double *predkosc, clock_t *start, Klocek *Obecny, Klocek *Cien, Klocek *Nastepny);
+void Aktualizuj(char plansza[WYS][SZER], int wynik, double predkosc, Klocek *Obecny, Klocek *Cien);
+
 void Scoreboard(int wynik);
 char* KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik, double predkosc);
+
+void NaDole(char plansza[WYS][SZER], const Klocek tab[TYPY], int *wynik, double *predkosc, clock_t *start, Klocek *Obecny, Klocek *Cien, Klocek *Nastepny);
+void Wykonaj(int znak, char plansza[WYS][SZER], const Klocek tab[TYPY], int *wynik, double *predkosc, clock_t *start, Klocek *Obecny, Klocek *Cien, Klocek *Nastepny);
 
 
 #endif // FUNCTIONS_H_INCLUDED

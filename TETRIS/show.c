@@ -4,11 +4,10 @@
 #include <time.h>
 #include <conio.h>
 #include <windows.h>
-#include <string.h>
 
 #include "blocks.h"
 
-// CZYSCZENIE EKRANU, PRZENOSZENIE KURSORA NA POCZATEK, CHOWANIE KURSORA (korzystaja z windows.h)
+// CZYSZCZENIE EKRANU, PRZENOSZENIE KURSORA NA POCZATEK, CHOWANIE KURSORA (korzystaja z windows.h)
 
 void ClearScreen()
 {
@@ -36,7 +35,7 @@ void HideCursor()
     SetConsoleCursorInfo(hOut, &ConCurInf);
 }
 
-// USYPIANIE EKRANU - korzystaja z windows.h
+// USYPIANIE PROGRAMU - korzystaja z windows.h
 
 void Sleep1Sec()
 {

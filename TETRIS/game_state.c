@@ -69,8 +69,7 @@ void UstawPredkosc(double *predkosc, int wynik)
 Klocek Losuj(const Klocek tab[TYPY])
 {
     int los = rand() % TYPY;
-    Klocek Wylosowany = tab[los];
-    return Wylosowany;
+    return tab[los];
 }
 
 // wstawienie Klockow Obecny i Cien do planszy, zwrocenie false, jezeli wstawienie jest niemozliwe
@@ -303,20 +302,49 @@ bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik, double pre
     return usunieto;
 }
 
-void NowaGra(char plansza[WYS][SZER], const Klocek tab[TYPY], int *wynik, double *predkosc, clock_t *start, Klocek Obecny, Klocek Cien, Klocek Nastepny)
+// funkcja wywolywana po wybraniu START z menu lub po wybraniu RESTART w grze
+void NowaGra(char plansza[WYS][SZER], const Klocek tab[TYPY], int *wynik, double *predkosc, clock_t *start, Klocek *Obecny, Klocek *Cien, Klocek *Nastepny)
 {
     ClearScreen();
     Inicjalizuj(plansza);
-    Cien = Obecny = Losuj(tab); // wylosowanie Klocka Obecny
-    while(!Spadek(plansza, &Cien, 1));  // przesuwanie Cienia w dol tak dlugo, jak to mozliwe
-    WstawKlocek(plansza, Obecny, Cien); // wstawienie obu Klockow
+    *Cien = *Obecny = Losuj(tab); // wylosowanie Klocka Obecny
+    while(!Spadek(plansza, Cien, 1));  // przesuwanie Cienia w dol tak dlugo, jak to mozliwe
+    WstawKlocek(plansza, *Obecny, *Cien); // wstawienie obu Klockow
     *wynik = 0;
     *predkosc = 1;
-    Nastepny = Losuj(tab);   // wylosowanie Klocka Nastepny
-    WstawNastepny(plansza, Obecny, Nastepny);   // wstawienie go w prawy gorny rog planszy
+    *Nastepny = Losuj(tab);   // wylosowanie Klocka Nastepny
+    WstawNastepny(plansza, *Obecny, *Nastepny);   // wstawienie go w prawy gorny rog planszy
     ReturnCursor();
     Rysuj(plansza, *wynik, *predkosc);
     *start = clock();
+}
+
+// funkcja wywolana po wcisnieciu znaku 'ESC'
+void WykonajPauze(char plansza[WYS][SZER], const Klocek tab[TYPY], int *wynik, double *predkosc, clock_t *start, Klocek *Obecny, Klocek *Cien, Klocek *Nastepny)
+{
+    char *opcja = Pauza(); // w zaleznosci od wyniku Pauza wyjscie z gry, resume, wyjscie do menu lub restart
+    if (!strcmp(opcja, "EXIT"))
+        exit(0);
+    else if (!strcmp(opcja, "RESUME"))
+    {
+        ClearScreen();
+        HideCursor();
+        Rysuj(plansza, *wynik, *predkosc);
+    }
+    else if (!strcmp(opcja, "MENU"))
+        Menu();
+    if (!strcmp(opcja, "RESTART") || !strcmp(opcja, "MENU"))    // restart z menu lub pauzy
+        NowaGra(plansza, tab, wynik, predkosc, start, Obecny, Cien, Nastepny);
+}
+
+// aktualizacja planszy po obrocie, ruchu w lewo lub prawo
+void Aktualizuj(char plansza[WYS][SZER], int wynik, double predkosc, Klocek *Obecny, Klocek *Cien)
+{
+    *Cien = *Obecny;  // podstawienie Obecny pod Cien
+    while(!Spadek(plansza, Cien, 1));  // przesuwanie Cienia w dol tak dlugo, jak to mozliwe
+    WstawKlocek(plansza, *Obecny, *Cien); // wstawienie klockow
+    ReturnCursor();
+    Rysuj(plansza, wynik, predkosc);    // wyswietlenie planszy
 }
 
 
@@ -424,5 +452,77 @@ char* KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik, double predko
             else if (znak == ESC)
                 return "EXIT";
         }
+    }
+}
+
+// funkcja wywolywana gdy klocek Obecny spadnie na sam dol
+void NaDole(char plansza[WYS][SZER], const Klocek tab[TYPY], int *wynik, double *predkosc, clock_t *start, Klocek *Obecny, Klocek *Cien, Klocek *Nastepny)
+{
+    if (SprawdzWiersze(plansza, Obecny->srodek.y - 2, wynik, *predkosc))    // sprawdzenie, czy sa pelne wiersze (od wiersza rownego srodek klocka, ktory spadl - 2)
+    {
+        *start = clock();
+        ReturnCursor();
+        Rysuj(plansza, *wynik, *predkosc);
+    }
+    *Cien = *Obecny = *Nastepny;   // Obecny i Cien staja sie Nastepnym
+    while(!Spadek(plansza, Cien, 1));
+    if (!WstawKlocek(plansza, *Obecny, *Cien))    // jesli gra nie moze wstawic nowego klocka na gore planszy, to koniec gry
+    {
+        char* opcja = KoniecGry(plansza, *Obecny, *wynik, *predkosc);
+        if (!strcmp(opcja, "EXIT"))
+            exit(0);
+        else if (!strcmp(opcja, "MENU"))
+            Menu();
+        else if (!strcmp(opcja, "RESTART"))
+            NowaGra(plansza, tab, wynik, predkosc, start, Obecny, Cien, Nastepny);
+    }
+    else    // w przeciwnym wypadku losuj nowy klocek
+    {
+        *Nastepny = Losuj(tab);  // losowanie Klocka Nastepny i wstawienie go w prawy gorny rog planszy
+        WstawNastepny(plansza, *Obecny, *Nastepny);
+    }
+}
+
+// funkcja wykonujaca ruch wg przekazanego jako argument znaku
+void Wykonaj(int znak, char plansza[WYS][SZER], const Klocek tab[TYPY], int *wynik, double *predkosc, clock_t *start, Klocek *Obecny, Klocek *Cien, Klocek *Nastepny)
+{
+    switch(znak)
+    {
+    case ESC:
+        WykonajPauze(plansza, tab, wynik, predkosc, start, Obecny, Cien, Nastepny);
+        break;
+    case 'w':   // obrot
+        if (Obrot(plansza, Obecny, Cien)) // obrocenie klocka Obecny (jesli to mozliwe - wtedy true)
+            Aktualizuj(plansza, *wynik, *predkosc, Obecny, Cien);
+        break;
+    case 'a':   // lewo
+        if (Lewo(plansza, Obecny, Cien))  // przesuniecie klocka Obecny o 1 w lewo (jesli to mozliwe - wtedy true)
+            Aktualizuj(plansza, *wynik, *predkosc, Obecny, Cien);
+        break;
+    case 'd':   // prawo
+        if (Prawo(plansza, Obecny, Cien)) // przesuniecie klocka Obecny o 1 w prawo (jesli to mozliwe - wtedy true)
+            Aktualizuj(plansza, *wynik, *predkosc, Obecny, Cien);
+        break;
+    case 's':   // dol
+        if (Spadek(plansza, Obecny, 0))    // wywolanie spadek, true jezeli klocek spadl na sam dol
+            NaDole(plansza, tab, wynik, predkosc, start, Obecny, Cien, Nastepny);
+        else    // klocek nie spadl na sam dol, wtedy wstaw Klocki Obecny i Cien i odswiez plansze
+            WstawKlocek(plansza, *Obecny, *Cien);
+        ReturnCursor();
+        Rysuj(plansza, *wynik, *predkosc);
+        break;
+    case ENTER: // na sam dol
+        while (!Spadek(plansza, Obecny, 0));   // przesuwanie klocka Obecny w dol tak dlugo, jak to mozliwe
+        NaDole(plansza, tab, wynik, predkosc, start, Obecny, Cien, Nastepny);
+        ReturnCursor();
+        Rysuj(plansza, *wynik, *predkosc);
+        break;
+    case AUTO:  // automatyczny spadek klocka
+        if (Spadek(plansza, Obecny, 0))    // wywolanie spadek, true jezeli klocek spadl na sam dol
+            NaDole(plansza, tab, wynik, predkosc, start, Obecny, Cien, Nastepny);
+        else
+            WstawKlocek(plansza, *Obecny, *Cien);
+        ReturnCursor();
+        break;
     }
 }
