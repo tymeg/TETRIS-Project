@@ -9,6 +9,12 @@
 #include "blocks.h"
 #include "show.h"
 
+
+// #############################################################
+// FUNKCJE PODSTAWOWE
+// #############################################################
+
+
 // wstawienie na poczatku gry odpowiednich znakow do tablicy plansza - spacje oraz 'O' jako obramowania
 void Inicjalizuj(char plansza[WYS][SZER])
 {
@@ -93,6 +99,12 @@ bool WstawKlocek(char plansza[WYS][SZER], Klocek Obecny, Klocek Cien)
     }
     return pom;
 }
+
+
+//#####################################################################
+// FUNKCJE RUCHU
+//#####################################################################
+
 
 // przestawianie '+' Klocka o jedno pole w dol w planszy
 bool Spadek(char plansza[WYS][SZER], Klocek *Obecny, bool czy_cien)
@@ -302,50 +314,10 @@ bool SprawdzWiersze (char plansza[WYS][SZER], int wiersz, int *wynik, double pre
     return usunieto;
 }
 
-// funkcja wywolywana po wybraniu START z menu lub po wybraniu RESTART w grze
-void NowaGra(char plansza[WYS][SZER], const Klocek tab[TYPY], int *wynik, double *predkosc, clock_t *start, Klocek *Obecny, Klocek *Cien, Klocek *Nastepny)
-{
-    ClearScreen();
-    Inicjalizuj(plansza);
-    *Cien = *Obecny = Losuj(tab); // wylosowanie Klocka Obecny
-    while(!Spadek(plansza, Cien, 1));  // przesuwanie Cienia w dol tak dlugo, jak to mozliwe
-    WstawKlocek(plansza, *Obecny, *Cien); // wstawienie obu Klockow
-    *wynik = 0;
-    *predkosc = 1;
-    *Nastepny = Losuj(tab);   // wylosowanie Klocka Nastepny
-    WstawNastepny(plansza, *Obecny, *Nastepny);   // wstawienie go w prawy gorny rog planszy
-    ReturnCursor();
-    Rysuj(plansza, *wynik, *predkosc);
-    *start = clock();
-}
 
-// funkcja wywolana po wcisnieciu znaku 'ESC'
-void WykonajPauze(char plansza[WYS][SZER], const Klocek tab[TYPY], int *wynik, double *predkosc, clock_t *start, Klocek *Obecny, Klocek *Cien, Klocek *Nastepny)
-{
-    char *opcja = Pauza(); // w zaleznosci od wyniku Pauza wyjscie z gry, resume, wyjscie do menu lub restart
-    if (!strcmp(opcja, "EXIT"))
-        exit(0);
-    else if (!strcmp(opcja, "RESUME"))
-    {
-        ClearScreen();
-        HideCursor();
-        Rysuj(plansza, *wynik, *predkosc);
-    }
-    else if (!strcmp(opcja, "MENU"))
-        Menu();
-    if (!strcmp(opcja, "RESTART") || !strcmp(opcja, "MENU"))    // restart z menu lub pauzy
-        NowaGra(plansza, tab, wynik, predkosc, start, Obecny, Cien, Nastepny);
-}
-
-// aktualizacja planszy po obrocie, ruchu w lewo lub prawo
-void Aktualizuj(char plansza[WYS][SZER], int wynik, double predkosc, Klocek *Obecny, Klocek *Cien)
-{
-    *Cien = *Obecny;  // podstawienie Obecny pod Cien
-    while(!Spadek(plansza, Cien, 1));  // przesuwanie Cienia w dol tak dlugo, jak to mozliwe
-    WstawKlocek(plansza, *Obecny, *Cien); // wstawienie klockow
-    ReturnCursor();
-    Rysuj(plansza, wynik, predkosc);    // wyswietlenie planszy
-}
+// ##############################################################
+// SCOREBOARD I KONIEC GRY (zapisywanie stanu gry + wyswietlanie)
+// ##############################################################
 
 
 // funkcja uruchamiana przy koncu gry - wczytywanie obecnego scoreboardu, dopisywanie nowego wyniku i wyswietlanie scoreboarda
@@ -453,6 +425,57 @@ char* KoniecGry(char plansza[WYS][SZER], Klocek Obecny, int wynik, double predko
                 return "EXIT";
         }
     }
+}
+
+
+// ###################################################################
+// FUNKCJE POMOCNICZE, KORZYSTAJACE Z FUNKCJI WCZESNIEJ ZDEFINIOWANYCH
+// ###################################################################
+
+
+// funkcja wywolywana po wybraniu START z menu lub po wybraniu RESTART w grze
+void NowaGra(char plansza[WYS][SZER], const Klocek tab[TYPY], int *wynik, double *predkosc, clock_t *start, Klocek *Obecny, Klocek *Cien, Klocek *Nastepny)
+{
+    ClearScreen();
+    Inicjalizuj(plansza);
+    *Cien = *Obecny = Losuj(tab); // wylosowanie Klocka Obecny
+    while(!Spadek(plansza, Cien, 1));  // przesuwanie Cienia w dol tak dlugo, jak to mozliwe
+    WstawKlocek(plansza, *Obecny, *Cien); // wstawienie obu Klockow
+    *wynik = 0;
+    *predkosc = 1;
+    *Nastepny = Losuj(tab);   // wylosowanie Klocka Nastepny
+    WstawNastepny(plansza, *Obecny, *Nastepny);   // wstawienie go w prawy gorny rog planszy
+    ReturnCursor();
+    Rysuj(plansza, *wynik, *predkosc);
+    *start = clock();
+}
+
+// funkcja wywolana po wcisnieciu znaku 'ESC'
+void WykonajPauze(char plansza[WYS][SZER], const Klocek tab[TYPY], int *wynik, double *predkosc, clock_t *start, Klocek *Obecny, Klocek *Cien, Klocek *Nastepny)
+{
+    char *opcja = Pauza(); // w zaleznosci od wyniku Pauza wyjscie z gry, resume, wyjscie do menu lub restart
+    if (!strcmp(opcja, "EXIT"))
+        exit(0);
+    else if (!strcmp(opcja, "RESUME"))
+    {
+        ClearScreen();
+        HideCursor();
+        Rysuj(plansza, *wynik, *predkosc);
+    }
+    else if (!strcmp(opcja, "MENU"))
+        Menu();
+    if (!strcmp(opcja, "RESTART") || !strcmp(opcja, "MENU"))    // restart z menu lub pauzy
+        NowaGra(plansza, tab, wynik, predkosc, start, Obecny, Cien, Nastepny);
+}
+
+// aktualizacja planszy po obrocie, ruchu w lewo lub prawo
+void Aktualizuj(char plansza[WYS][SZER], int wynik, double predkosc, Klocek *Obecny, Klocek *Cien)
+{
+    *Cien = *Obecny;  // podstawienie Obecny pod Cien
+    while(!Spadek(plansza, Cien, 1));  // przesuwanie Cienia w dol tak dlugo, jak to mozliwe
+    WstawKlocek(plansza, *Obecny, *Cien); // wstawienie klockow
+    ReturnCursor();
+    Rysuj(plansza, wynik, predkosc);    // wyswietlenie planszy
 }
 
 // funkcja wywolywana gdy klocek Obecny spadnie na sam dol
